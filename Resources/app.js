@@ -29,7 +29,7 @@ if (Ti.version < 1.8 ) {
 	db.execute('CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, name TEXT, value TEXT);');
 
 	//table to store user credentials
-	db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, projectID TEXT, serverURL TEXT);');
+	db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
 
 	//table to store queries
 	db.execute('CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT, captured INTEGER, url TEXT, capturedLat REAL, capturedLong REAL);');

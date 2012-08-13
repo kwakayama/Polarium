@@ -311,6 +311,7 @@ exports.ApplicationWindow = function() {
 				});
 				//set the callback of the submit button
 				submitButton.callback = function () {
+				    
 					alert("submit it");
 				};
 

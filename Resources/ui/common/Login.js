@@ -29,7 +29,7 @@ exports.createView = function() {
 };
 
 // function to retrieve values form the database
-// returns an object containing username, pwd, serverURL and projectID
+// returns an object containing username, pwd, serverURL
 function getCredentials(){
 	
 	//open database
@@ -37,7 +37,6 @@ function getCredentials(){
 
 	//retrieve data
 	var credentials = db.execute('SELECT * FROM credentials');
-
 	//create result object
 	var result;
 
@@ -46,8 +45,7 @@ function getCredentials(){
 		result = {
 			pwd : credentials.fieldByName('pwd'),
 			username : credentials.fieldByName('username'),
-			serverURL : credentials.fieldByName('serverURL'),
-			projectID : credentials.fieldByName('projectID')
+			serverURL : credentials.fieldByName('serverURL')
 		};
 	
 	} else{
@@ -65,7 +63,7 @@ function setCredentials(login){
 	//open database
 	var db = Ti.Database.open('PolarionApp');
 
-	db.execute('INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL,projectID) VALUES (1,?,?,?,?)', login.username, login.pwd, login.serverURL, login.projectID);
+	db.execute('INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,?,?,?)', login.username, login.pwd, login.serverURL);
 
 	db.close();
 
@@ -83,35 +81,29 @@ function validateUsername(username) {
     return /^[0-9a-zA-Z_.-]+$/.test(username);
 }
 
-//function to valitate a ProjectID
-function validateProjectID(id) {
-    return /^[0-9a-zA-Z_.-]+$/.test(id);
-}
-
 //function to check the logindata
 //returns true if the logininformation is valid and false if it's invalid
 function checkLoginData(login){
-	if (validateURL(login.serverURL) && validateUsername(login.username) && validateProjectID(login.projectID)) {
-		return true;
-	} else{
-		return false;
-	}
+	// if (validateURL(login.serverURL) && validateUsername(login.username)) {
+		// return true;
+	// } else{
+		// return false;
+	// }
+	return true;
 }
 
 // Show View
 exports.showView = function(){
 	var username,
 		pwd,
-		serverURL,
-		projectID;
-
+		serverURL;
+		
 	//check if data is stored in database
 	credentials = getCredentials();
 	if (credentials !== null) {
 		username = credentials.username;
 		pwd = credentials.pwd;
 		serverURL = credentials.serverURL;
-		projectID = credentials.projectID;
 	}
 
 	var lbl = Ti.UI.createLabel({
@@ -129,25 +121,18 @@ exports.showView = function(){
 	      color: '#336699',
 	      hintText: 'Server URL',
 	      width: 250, height: 'auto',
-	      value: serverURL
+	      value: serverURL,
+	      autocorrect: false 
 	    });
     self.add(Server_Field);
-
-    Project_Field = Ti.UI.createTextField({
-	      borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-	      color: '#336699',
-	      hintText: 'Project ID',
-	      width: 250, height: 'auto',
-	      value: projectID
-	    });
-    self.add(Project_Field);
 	
 	Username_Field = Ti.UI.createTextField({
       borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
       color: '#336699',
       hintText: 'Username',
       width: 250, height: 'auto',
-      value: username
+      value: username,
+      autocorrect: false
     });
     self.add(Username_Field);
 
@@ -157,7 +142,8 @@ exports.showView = function(){
       hintText: 'Password',
       passwordMask: 'true',
       width: 250, height: 'auto',
-      value: pwd
+      value: pwd,
+      autocorrect: false
     });
     self.add(Pwd_Field);
 
@@ -181,29 +167,30 @@ exports.showView = function(){
 		var loginData = {
 			username : Username_Field.getValue(),
 			pwd : Pwd_Field.getValue(),
-			serverURL : Server_Field.getValue(),
-			projectID : Project_Field.getValue()
+			serverURL : Server_Field.getValue()
 		};
 		
 		//check input fields
 		if (checkLoginData(loginData) === true) {
-
 			setCredentials(loginData);
 			
 			//log into Polarium
 			//TODO ERROR CASE
-			//PAPI.Polarium.logintoPolarium(loginData.username, loginData.pwd);
 			VARS.GV.login(function(sessionid) {
-                alert("sessionid: "+sessionid);
-            });
-			// Polarium.sessionService.login(
-                // loginData.username,
-                // loginData.pwd,
-                // function(arg) { alert(arg); }, 
-                // function(err) { alert(err); });
-
-			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
-			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
+			    if (sessionid !== null) {
+			        
+			        alert("sessionid: "+sessionid);
+			        
+			        VARS.GV.getprojects();
+                    
+                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
+                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
+                    
+                }else {
+                    alert('sorry, can not log in');
+                }
+                
+            })
 
 		} else{
 			

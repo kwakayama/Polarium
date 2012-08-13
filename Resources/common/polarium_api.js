@@ -185,7 +185,7 @@ Polarium.types.Project = function() {
         // this.lead = find(lead,'id').textContent;
         this.isResolved = true; //should be overridden if not. (e.g. in getProjects by projectGroups)
         
-        console.log('created project object: '+this.id);
+        Ti.API.log('created project object: '+this.id);
         return this;
     };
     this.id = "";
@@ -245,19 +245,21 @@ Polarium.sessionService = {
             var head = doc.getFirstChild();
             //get session id
             sessionid = head.getText();
-            
             //save session
             this.session = sessionid;
             this.isLogin = true;
             
             //log
-            log("login success. session: "+sessionid);
+            Ti.API.log("login success. session: "+sessionid);
             
             //call futher delegation callback
             donecallback(sessionid);
         };
         
         var loginerrdelegate = function(msg, errcode) {
+            //call for error handling
+            donecallback(null);
+            
             this.session = null;
             this.isLogin = false;
             
@@ -363,8 +365,7 @@ Polarium.projectService.getUser = function(userid, callback, errorcallback) {
 };
 
 Polarium.projectService.getProjects = function(callback, errorcallback) {
-    log("--- projectService: getProjects ---");
-    
+    Ti.API.log("--- projectService: getProjects ---");
     Polarium.SOAP.send(
             Polarium.connection.getProjectService(),
             sessionid, 
@@ -385,7 +386,7 @@ Polarium.projectService.getProjects = function(callback, errorcallback) {
                 }
                 
                 //Debug 
-                log("projects returned: "+projects.length);
+                Ti.API.log("projects returned: "+projects.length);
                 
                 //Return 
                 callback(projects);
