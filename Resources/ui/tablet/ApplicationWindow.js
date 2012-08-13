@@ -363,6 +363,9 @@ exports.ApplicationWindow = function() {
 			
 				//Navigate  to Login View
 				Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+				
+				//fire polarium logout request
+                VARS.GV.logout();
 			
 			};
 

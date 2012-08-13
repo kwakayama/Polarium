@@ -15,7 +15,6 @@ exports.createView = function() {
 
 	// Global VARS
 	VARS  = require('/common/globals');
-	Polarium = require('/common/polarium_api').Polarium;
 
 	// Create Object Instance, A Parasitic Subclass of Observable
 	self = Ti.UI.createView({
@@ -194,11 +193,14 @@ exports.showView = function(){
 			//log into Polarium
 			//TODO ERROR CASE
 			//PAPI.Polarium.logintoPolarium(loginData.username, loginData.pwd);
-			Polarium.sessionService.login(
-                loginData.username,
-                loginData.pwd,
-                function(arg) { alert(arg); }, 
-                function(err) { alert(err); });
+			VARS.GV.login(function(sessionid) {
+                alert("sessionid: "+sessionid);
+            });
+			// Polarium.sessionService.login(
+                // loginData.username,
+                // loginData.pwd,
+                // function(arg) { alert(arg); }, 
+                // function(err) { alert(err); });
 
 			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
 			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });

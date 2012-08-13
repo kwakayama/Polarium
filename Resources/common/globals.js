@@ -1,3 +1,5 @@
+var Polarium = require('/common/polarium_api').Polarium;
+
 // Common Global Variables
 var GV  =
 {
@@ -25,12 +27,29 @@ var GV  =
                 }
             }
         }
+	},
+	login : function(argument){
+        loginThen(argument);	    
+	},
+	logout : function(argument) {
+        var ok = function(workitems) {
+            Ti.API.debug("Logout done");
+        };
+        var error = function(argument) {
+          alert("error - couldn't logout");
+        };
+        Polarium.sessionService.logout(ok,error);
 	}
+	
 };
 
-// GV.ai = function(){
-//     alert("global!");
-// };
+var loginThen = function(then) {
+    Polarium.sessionService.login(
+        'kwakayam',
+        'thesis',
+        function(arg) { then(arg); }, 
+        function(err) { alert(err); });
+};
 
 exports.GVUpdate  = function( globalVarName, globalVarValue )
 {
