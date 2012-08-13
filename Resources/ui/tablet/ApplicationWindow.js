@@ -2,7 +2,6 @@
 var self;
 
 var VARS;
-var logoutButton;
 
 //Application Window Component Constructor
 exports.ApplicationWindow = function() {
@@ -13,6 +12,8 @@ exports.ApplicationWindow = function() {
 	//declare views
 	var MasterView = require('ui/common/Master'),
 		DetailView = require('ui/common/Detail'),
+		About = require('ui/common/AboutDetail'),
+		Settings = require('ui/common/SettingsDetail'),
 		QueryMaster = require('ui/common/QueryMaster'),
 		QueryDetail = require('ui/common/QueryDetail'),
 		Login = require('ui/common/Login'),
@@ -75,6 +76,8 @@ exports.ApplicationWindow = function() {
 		var detailView = DetailView.createView();
 		var template = TemplateView.createView();
 		var loginView = Login.createView();
+		var settingsView = Settings.createView();
+		var aboutView = About.createView();
 
 		//add view controller to container
 		viewControllers.push(TemplateView);
@@ -83,6 +86,9 @@ exports.ApplicationWindow = function() {
 		viewControllers.push(MasterView);
 		viewControllers.push(QueryMaster);
 		viewControllers.push(QueryDetail);
+		viewControllers.push(Settings);
+		viewControllers.push(About);
+		
 
 		//add views to "stage" / into the containers
 		self.add(template);
@@ -91,6 +97,8 @@ exports.ApplicationWindow = function() {
 		masterContainer.add(queryMasterView);
 		detailContainer.add(queryDetailView);
 		detailContainer.add(detailView);
+		detailContainer.add(settingsView);
+		detailContainer.add(aboutView);
 
 		//hide all views
 		hideAllViews('all');
@@ -107,7 +115,7 @@ exports.ApplicationWindow = function() {
 		barColor:'#336699',
 		tabBarHidden:true
 	});
-
+        
 	// create tab group  
 	var tabGroup = Titanium.UI.createTabGroup(); 
 	
@@ -185,6 +193,7 @@ exports.ApplicationWindow = function() {
 					//set logout button
 					setLogoutButton(true);
 					setBackButton(false);
+					showToolbar(null);
 
 					//hide views
 					hideAllViews('master');
@@ -202,6 +211,7 @@ exports.ApplicationWindow = function() {
 					//set back and logout buttons
 					setBackButton(true);
 					setLogoutButton(true);
+					showToolbar('query');
 
 					//hide views
 					hideAllViews('master');
@@ -233,7 +243,39 @@ exports.ApplicationWindow = function() {
 					detailContainer.show();
 					DetailView.showView();
 
-				} else if(notificationData.view === 'queryDetail') {
+				} else if(notificationData.view === 'settings') {
+                    
+                    //set logout button
+                    setLogoutButton(true);
+
+                    //hide views
+                    hideAllViews('detail');
+                    hideAllViews('full');
+
+                    // Set Current view
+                    VARS.GVUpdate( 'currentDetail', 'settings' );
+                    
+                    // Show detail View
+                    detailContainer.show();
+                    Settings.showView();
+
+                }else if(notificationData.view === 'about') {
+                    
+                    //set logout button
+                    setLogoutButton(true);
+
+                    //hide views
+                    hideAllViews('detail');
+                    hideAllViews('full');
+
+                    // Set Current view
+                    VARS.GVUpdate( 'currentDetail', 'about' );
+                    
+                    // Show detail View
+                    detailContainer.show();
+                    About.showView();
+
+                } else if(notificationData.view === 'queryDetail') {
 					
 					//set logout button
 					setLogoutButton(true);
@@ -351,9 +393,8 @@ exports.ApplicationWindow = function() {
 	var setLogoutButton = function(visible) {
 				
 		if (visible === true) {
-
 			//create logout button
-			logoutButton = Ti.UI.createButton({title:'Logout'});
+			var logoutButton = Ti.UI.createButton({title:'Logout'});
 			
 			// workaround for callback of navButton	
 			self.add(logoutButton);
@@ -410,6 +451,26 @@ exports.ApplicationWindow = function() {
 		}
 	};
 	
+	
+	var showToolbar = function(type) {
+        
+        var flexSpace = Titanium.UI.createButton({
+            systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        });
+        
+        if (type === 'query') {
+            var refreshButton = Ti.UI.createButton({
+                systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
+            });
+            var saveButton = Ti.UI.createButton({title:'Save'});
+            self.setToolbar([saveButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,flexSpace]);
+            
+        } else{
+            //show blank toolbar        
+            self.setToolbar([flexSpace]);
+            
+        }
+	};
 	//the "real" start
 	createViews();
 

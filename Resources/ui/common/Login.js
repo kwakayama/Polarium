@@ -179,7 +179,7 @@ exports.showView = function(){
 			VARS.GV.login(function(sessionid) {
 			    if (sessionid !== null) {
 			        
-			        alert("sessionid: "+sessionid);
+			        Ti.API.log("sessionid: "+sessionid);
 			        
 			        VARS.GV.getprojects();
                     

@@ -43,11 +43,10 @@ var GV  =
 	getprojects : function(argument) {
 	    loginThen(function() {
             var ok = function(projects) {
-                alert("OK getProjects");
-                alert(projects);
+                Ti.API.log(projects);
             };
             var error = function(argument) {
-                alert("error - couldn't get projects");
+                Ti.API.log("error - couldn't get projects");
             };
             Polarium.projectService.getProjects(ok, error);
         });

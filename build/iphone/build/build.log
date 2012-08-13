@@ -5,7 +5,7 @@ reporting an issue to help us understand your environment, build settings
 and aid in debugging. Please attach this log to any issue that you report.
 ================================================================================
 
-Starting build at 08/13/12 14:06
+Starting build at 08/13/12 15:27
 
 Build details:
 
@@ -17,12 +17,14 @@ Build details:
 
 Script arguments:
    /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.0.1.GA2/iphone/builder.py
-   run
-   /Users/kenta/CODE/Titanium_workspace/PolarionApp/
-   5.0
+   simulator
+   5.1
+   /Users/kenta/CODE/Titanium_workspace/PolarionApp
    de.kw.polarion
    PolarionApp
    ipad
+   ipad
+   
 
 Building from: /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.0.1.GA2/iphone
 Platform: Darwin Kernel Version 12.0.0: Sun Jun 24 23:00:16 PDT 2012; root:xnu-2050.7.9~1/RELEASE_X86_64

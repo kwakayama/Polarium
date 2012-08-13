@@ -12,10 +12,10 @@ exports.type = "master";
 			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
 		}},
 		{title:'Settings', hasChild:true, image:'settingsIcon.png', callback:function function_name (argument) {
-			// body...
+			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'settings', 'type':'detail', 'params':'' } });
 		}},
 		{title:'About', hasChild:true, image:'aboutIcon.png', callback:function function_name (argument) {
-			// body...
+			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'about', 'type':'detail', 'params':'' } });
 		}}
 	];
 
