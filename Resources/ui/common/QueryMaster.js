@@ -34,7 +34,7 @@ function checkLable(title){
             type : queryData.fieldByName('type'),
             author : queryData.fieldByName('author'),
             assignables : queryData.fieldByName('assignables'),
-            custom : queryData.fieldByName('custom'),
+            custom : queryData.fieldByName('custom')
         };
 
         db.close();

@@ -1,4 +1,4 @@
-// Private Vars
+//Private Vars
 var self;
 var VARS;
 var hasQueryData = false;
@@ -47,11 +47,20 @@ exports.createView = function() {
 // Show View
 exports.showView = function(arguments){
 	if (arguments !== null) {
+	    //call from button or pulldown
 	    hasQueryData = true;
 	    Ti.API.log(JSON.stringify(arguments));
+	}else{
+	    //normal show - do a request with currentworkitemid
+	    var workitemCallback = function(arg){
+            Ti.API.log('mycallback says: '+arg);
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':arg } });
+        };
+        VARS.GV.getWorkitems(workitemCallback);
 	}
 	var lbl = Ti.UI.createLabel({
 		top:10,
+		height:'auto',
 		font: { fontWeight:'bold',fontSize:24 },
 		text:'Query Results:'
 	});
@@ -63,13 +72,14 @@ exports.showView = function(arguments){
 	});
 	
     if (hasQueryData === true) {
+        lbl.text = 'Query Results: ('+arguments.length+')';
         var customTableData = [];
         var key;
         for (key in arguments) {
             var obj = arguments[key];
-            Ti.API.log('title: '+obj.title);
-            Ti.API.log('status: '+obj.status);
-            Ti.API.log('created: '+obj.created);
+            // Ti.API.log('title: '+obj.title);
+            // Ti.API.log('status: '+obj.status);
+            // Ti.API.log('created: '+obj.created);
             
             var row = Titanium.UI.createTableViewRow({
                 height:50
@@ -77,6 +87,7 @@ exports.showView = function(arguments){
             var rowID = Titanium.UI.createLabel({
                 text: obj.id,
                 font:{fontSize:12,fontWeight:'bold'},
+                height:'auto',
                 width:'auto',
                 textAlign:'left',
                 top:27,
@@ -86,7 +97,7 @@ exports.showView = function(arguments){
             var rowTitle = Titanium.UI.createLabel({
                 text: trimTitle(obj.title),
                 font:{fontSize:16,fontWeight:'bold'},
-                height:'5',
+                height:'auto',
                 width:'auto',
                 textAlign:'left',
                 top:5,
@@ -97,6 +108,7 @@ exports.showView = function(arguments){
             var rowStatus = Titanium.UI.createLabel({
                 text: obj.status,
                 font:{fontSize:12,fontWeight:'bold'},
+                height:'auto',
                 width:'auto',
                 textAlign:'left',
                 top:27,
@@ -106,6 +118,7 @@ exports.showView = function(arguments){
             var rowCreated = Titanium.UI.createLabel({
                 text: obj.created,
                 font:{fontSize:12,fontWeight:'bold'},
+                height:'auto',
                 width:'auto',
                 textAlign:'left',
                 top:27,
@@ -120,7 +133,7 @@ exports.showView = function(arguments){
             table.setData(customTableData);
         }
     } else{
-        alert('no table data :(');    
+        Ti.API.log('no table data :(');    
     }
 
 	// Show Stuff

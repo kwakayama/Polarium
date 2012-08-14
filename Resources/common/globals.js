@@ -75,8 +75,13 @@ var GV  =
         db.close();
 
     },
+    //Funktion make a request with the currentWorkitemID
     getWorkitems : function(mycall) {        
         loginThen(function() {
+            
+            //get current query out of the database
+            var query = getQueryById(GV.currentWorkItemQueryID);
+            
             var ok = function(workitems) {
                 Ti.API.log('we got ' + workitems.length + ' workitems :)');
                 mycall(workitems);
@@ -84,7 +89,7 @@ var GV  =
             var error = function(argument) {
                 Ti.API.log("error - couldn't get workitems :()");
             };
-            Polarium.trackerService.queryWorkitems("status:draft","id", ["id", "title", "status", "created", "description"], ok, error);
+            Polarium.trackerService.queryWorkitems(query,"id", ["id", "title", "status", "created", "description"], ok, error);
         });
     },
 	login : function(argument){
@@ -162,6 +167,60 @@ var getCredentials = function(){
 
     return result;
 };
+
+// function to retrieve query data form the database
+var getQueryById = function(id){
+    
+    //open database
+    var db = Ti.Database.open('PolarionApp');
+
+    //retrieve data
+    var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', id);
+
+    //create result object
+    var query;
+
+    if (queryData.isValidRow()) {
+    
+        var result = {
+            name : queryData.fieldByName('name'),
+            title : queryData.fieldByName('title'),
+            status : queryData.fieldByName('status'),
+            duedate : queryData.fieldByName('duedate'),
+            timepoint : queryData.fieldByName('timepoint'),
+            type : queryData.fieldByName('type'),
+            author : queryData.fieldByName('author'),
+            assignables : queryData.fieldByName('assignables'),
+            custom : queryData.fieldByName('custom')
+        };
+        
+        query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom);
+        
+        Ti.API.log('query: '+query);
+            
+    } else{
+        query = null;
+    }
+    db.close();
+    return query;
+};
+
+function queryHelper(title, value){
+    var result;
+    //expert mode ;)
+    if (value === 'custom') {
+        
+    }else{
+        //is the value empty or null then set value to search ALL
+        if (value === '' || value === null) {
+            result = 'NOT '+title+'######NULL';
+        } else{
+            result = title+':'+value;
+        }    
+    }
+    
+    return result;
+}
 
 exports.GVUpdate  = function( globalVarName, globalVarValue )
 {

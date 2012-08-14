@@ -36,6 +36,7 @@ exports.showView = function(){
     var lbl = Ti.UI.createLabel({
         text:'Settings',
         height:'auto',
+        height:'auto',
         width:'auto',
         color:'#000'
     });

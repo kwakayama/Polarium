@@ -266,8 +266,9 @@ exports.ApplicationWindow = function() {
 
 				} else if(notificationData.view === 'settings') {
                     
-                    //set logout button
+                    //set logout and back button
                     setLogoutButton(true);
+                    setBackButton(true);
 
                     //hide views
                     hideAllViews('detail');
@@ -282,8 +283,9 @@ exports.ApplicationWindow = function() {
 
                 }else if(notificationData.view === 'about') {
                     
-                    //set logout button
+                    //set logout and back button
                     setLogoutButton(true);
+                    setBackButton(true);
 
                     //hide views
                     hideAllViews('detail');

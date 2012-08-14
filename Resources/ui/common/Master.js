@@ -54,6 +54,7 @@ exports.showView = function(){
 		var rowTitle = Titanium.UI.createLabel({
 			text: Data[i].title,
 			font:{fontSize:16,fontWeight:'bold'},
+			height:'auto',
 			width:'auto',
 			textAlign:'left',
 			// top:2,
@@ -64,6 +65,7 @@ exports.showView = function(){
 		var rowIcon =  Titanium.UI.createImageView({
 			// url:CustomData[i].flag,
 			image: 'assets/images/' + Data[i].image,
+			height:'auto',
 			width:32,
 			height:32,
 			left:4,
