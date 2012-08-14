@@ -31,8 +31,10 @@ exports.createView = function() {
 
 
 // Show View
-exports.showView = function(){
-	
+exports.showView = function(argument){
+	if (argument !== null) {
+	    alert(argument.length);
+	};
 	var lbl = Ti.UI.createLabel({
 		top:10,
 		font: { fontWeight:'bold',fontSize:24 },

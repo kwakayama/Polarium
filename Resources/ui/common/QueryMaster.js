@@ -3,6 +3,11 @@ var self;
 var VARS;
 var table;
 var tableRowValues = [];
+var scrollStartCallback;
+var scrollEndCallback;
+//var to check if listener are set
+var setListener;
+
 //type of window
 exports.type = "master";
 
@@ -177,9 +182,19 @@ exports.showView = function(){
 		return datestr;
 	}
 	function beginReloading(){
-	    VARS.GV.getWorkitems();
-		// just mock out the reload
+		var workitemCallback = function(arg){
+			Ti.API.log('mycallback says: '+arg);
+			Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':arg } });
+		};
+		var timeoutCallback = function(argument) {
+		  VARS.GV.getWorkitems(workitemCallback);
+		};
+		//TODO Beide Timeouts zusammenführen
+		//timeout for hiding the bar
 		setTimeout(endReloading,2000);
+		//timeout for sending the request
+		// setTimeout(timeoutCallback,0);
+		timeoutCallback();
 	}
 
 	function endReloading(){
@@ -191,40 +206,44 @@ exports.showView = function(){
 		actInd.hide();
 		arrow.show();
 	}
-
-	table.addEventListener('scroll',function(e){
-		var offset = e.contentOffset.y;
-		if (offset < -65.0 && !pulling && !reloading)
-		{
-			var t = Ti.UI.create2DMatrix();
-			t = t.rotate(-180);
-			pulling = true;
-			arrow.animate({transform:t,duration:180});
-			statusLabel.text = "Release to refresh...";
-		}
-		else if((offset > -65.0 && offset < 0 ) && pulling && !reloading)
-		{
-			pulling = false;
-			var s = Ti.UI.create2DMatrix();
-			arrow.animate({transform:s,duration:180});
-			statusLabel.text = "Pull down to refresh...";
-		}    
-	});
-
-	table.addEventListener('scrollEnd', function(){	
-		if(pulling && !reloading)
-		{
-			reloading = true;
-			pulling = false;
-			arrow.hide();
-			actInd.show();
-			statusLabel.text = "Reloading...";
-			table.setContentInsets({top:60},{animated:true});
-			table.scrollToTop(-60,true);
-			arrow.transform=Ti.UI.create2DMatrix();
-			beginReloading();
-		}
-	});
+    scrollStartCallback = function(e) {
+        var offset = e.contentOffset.y;
+        if (offset < -65.0 && !pulling && !reloading)
+        {
+            var t = Ti.UI.create2DMatrix();
+            t = t.rotate(-180);
+            pulling = true;
+            arrow.animate({transform:t,duration:180});
+            statusLabel.text = "Release to refresh...";
+        }
+        else if((offset > -65.0 && offset < 0 ) && pulling && !reloading)
+        {
+            pulling = false;
+            var s = Ti.UI.create2DMatrix();
+            arrow.animate({transform:s,duration:180});
+            statusLabel.text = "Pull down to refresh...";
+        }    
+    };
+    
+    scrollEndCallback = function(){ 
+        if(pulling && !reloading)
+        {
+            reloading = true;
+            pulling = false;
+            arrow.hide();
+            actInd.show();
+            statusLabel.text = "Reloading...";
+            table.setContentInsets({top:60},{animated:true});
+            table.scrollToTop(-60,true);
+            arrow.transform=Ti.UI.create2DMatrix();
+            beginReloading();
+        }
+    };
+    
+    //add Eventlistener and remove them in the hide function
+    table.addEventListener('scroll',scrollStartCallback);
+	table.addEventListener('scrollEnd', scrollEndCallback);
+	setListener = true;
 
 	var border = Ti.UI.createView({
 		backgroundColor:"#576c89",
@@ -341,7 +360,11 @@ exports.showView = function(){
 
 // Hide View
 exports.hideView = function(){
-
+    //remove eventlistener
+    if (setListener === true) {
+        table.removeEventListener('scroll',scrollStartCallback);
+        table.removeEventListener('scrollEnd',scrollEndCallback);    
+    }
 	VARS.GV.removeAllChildren(self);
 
 	// Hide Stuff

@@ -276,7 +276,12 @@ exports.ApplicationWindow = function() {
                     About.showView();
 
                 } else if(notificationData.view === 'queryDetail') {
-					
+                    var arguments;
+                    if (notificationData.params !== '') {
+                        arguments = notificationData.params;
+                    } else{
+                        arguments = null;
+                    }
 					//set logout button
 					setLogoutButton(true);
 
@@ -289,7 +294,7 @@ exports.ApplicationWindow = function() {
 					
 					// Show detail View
 					detailContainer.show();
-					QueryDetail.showView();
+					QueryDetail.showView(arguments);
 
 				}
 

@@ -75,10 +75,11 @@ var GV  =
         db.close();
 
     },
-    getWorkitems : function(argument) {
+    getWorkitems : function(mycall) {        
         loginThen(function() {
             var ok = function(workitems) {
-                Ti.API.log('we got ' + workitems.length + 'workitems :)');
+                Ti.API.log('we got ' + workitems.length + ' workitems :)');
+                mycall(workitems);
             };
             var error = function(argument) {
                 Ti.API.log("error - couldn't get workitems :()");
