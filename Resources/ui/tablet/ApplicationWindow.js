@@ -65,6 +65,26 @@ exports.ApplicationWindow = function() {
 		}
 		
 	};
+	
+	var showToolbar = function(type) {
+        
+        var flexSpace = Titanium.UI.createButton({
+            systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
+        });
+        
+        if (type === 'query') {
+            var refreshButton = Ti.UI.createButton({
+                systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
+            });
+            var saveButton = Ti.UI.createButton({title:'Save'});
+            self.setToolbar([saveButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,flexSpace]);
+            
+        } else{
+            //show blank toolbar        
+            self.setToolbar([flexSpace]);
+            
+        }
+    };
 
 	// Create and Add Views To Main Window
 	var createViews = function(){
@@ -115,6 +135,7 @@ exports.ApplicationWindow = function() {
 		barColor:'#336699',
 		tabBarHidden:true
 	});
+	showToolbar();
         
 	// create tab group  
 	var tabGroup = Titanium.UI.createTabGroup(); 
@@ -301,7 +322,7 @@ exports.ApplicationWindow = function() {
 			} else if (notificationData.type === 'full') {
 				VARS.GVUpdate('previousFull' , VARS.GV.currentFull);
 				if (notificationData.view === 'login') {
-
+				    
 					//hide logout button
 					setLogoutButton(false);
 
@@ -560,26 +581,6 @@ exports.ApplicationWindow = function() {
 		}
 	};
 	
-	
-	var showToolbar = function(type) {
-        
-        var flexSpace = Titanium.UI.createButton({
-            systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
-        });
-        
-        if (type === 'query') {
-            var refreshButton = Ti.UI.createButton({
-                systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
-            });
-            var saveButton = Ti.UI.createButton({title:'Save'});
-            self.setToolbar([saveButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,flexSpace]);
-            
-        } else{
-            //show blank toolbar        
-            self.setToolbar([flexSpace]);
-            
-        }
-	};
 	//the "real" start
 	createViews();
 
