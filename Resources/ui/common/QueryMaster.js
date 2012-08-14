@@ -6,17 +6,61 @@ var tableRowValues = [];
 //type of window
 exports.type = "master";
 
-function checkLable (title) {
+//check if data for query exists in database
+function checkLable(title){
 	
-	var lableTitle = title;
-	// if (typeof Ti.App.Properties.getString('queryItem_'+title) !== 'undefined') {
-	// 	lableTitle = Ti.App.Properties.getString('queryItem_'+title);
-	// } else{
-	// 	lableTitle = 'alle';
-	// }
+	//open database
+    var db = Ti.Database.open('PolarionApp');
 
-	return lableTitle;
-	
+    //retrieve data
+    var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', VARS.GV.currentWorkItemQueryID);
+
+    //create result object
+    var result;
+
+    if (queryData.isValidRow()) {
+    
+        result = {
+            name : queryData.fieldByName('name'),
+            title : queryData.fieldByName('title'),
+            status : queryData.fieldByName('status'),
+            duedate : queryData.fieldByName('duedate'),
+            timepoint : queryData.fieldByName('timepoint'),
+            type : queryData.fieldByName('type'),
+            author : queryData.fieldByName('author'),
+            assignables : queryData.fieldByName('assignables'),
+            custom : queryData.fieldByName('custom'),
+        };
+
+        db.close();
+
+        if (title === 'Name'){
+            return (result.name !== '' && result.name !== null) ? result.name : 'Query';
+        } else if (title === 'Title'){
+			return (result.title !== '' && result.title !== null) ? result.title : 'alle';
+        } else if(title === 'Status'){
+			return (result.status !== '' && result.status !== null) ? result.status : 'alle';
+        } else if(title === 'Due Date'){
+			return (result.duedate !== '' && result.duedate !== null) ? result.duedate : 'alle';
+        } else if(title === 'Timepoint'){
+			return (result.timepoint !== '' && result.timepoint !== null) ? result.timepoint : 'alle';
+        } else if(title === 'Type'){
+			return (result.type !== '' && result.type !== null) ? result.type : 'alle';
+        } else if(title === 'Author'){
+			return (result.author !== '' && result.author !== null) ? result.author : 'alle';
+        } else if(title === 'Assignables'){
+			return (result.assignables !== '' && result.assignables !== null) ? result.assignables : 'alle';
+        } else if(title === 'Custom'){
+			return (result.custom !== '' && result.custom !== null) ? result.custom : 'alle';
+        } else{
+			return 'alle';
+        }
+        
+    
+    } else{
+		db.close();
+        return 'alle';
+    }
 }
 
 //some dummy data for our table view
@@ -51,12 +95,18 @@ var Data = [
 		Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Type', 'params':'' } });
 
 	}},
-	{title:'Author', getLable:checkLable, hasChild:true, callback:function function_name () {
-		
-		//open modal window
-		Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Author', 'params':'' } });
+    {title:'Author', getLable:checkLable, hasChild:true, callback:function function_name () {
+        
+        //open modal window
+        Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Author', 'params':'' } });
 
-	}},
+    }},
+    {title:'Assignables', getLable:checkLable, hasChild:true, callback:function function_name () {
+        
+        //open modal window
+        Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Assignables', 'params':'' } });
+
+    }},
 	{title:'Custom', getLable:checkLable, hasChild:true, callback:function function_name () {
 
 		//open modal window
@@ -95,8 +145,12 @@ exports.showView = function(){
 	var lbl = Ti.UI.createLabel({
 		top:11,
 		font: { fontWeight:'bold',fontSize:24 },
-		text:'Query'
+		text: checkLable('Name')
 	});
+	lbl.callback = function(){
+	    //open modal window
+        Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Name', 'params':'' } });
+	};
 	self.add(lbl);
 	
 	//create the table
@@ -114,7 +168,7 @@ exports.showView = function(){
 		var datestr = date.getMonth()+1+'/'+date.getDate()+'/'+date.getFullYear();
 		if (date.getHours()>=12)
 		{
-			datestr+=' '+(date.getHours()==12 ? date.getHours() : date.getHours()-12)+':'+date.getMinutes()+' PM';
+			datestr+=' '+(date.getHours()===12 ? date.getHours() : date.getHours()-12)+':'+date.getMinutes()+' PM';
 		}
 		else
 		{
@@ -123,18 +177,12 @@ exports.showView = function(){
 		return datestr;
 	}
 	function beginReloading(){
+	    VARS.GV.getWorkitems();
 		// just mock out the reload
 		setTimeout(endReloading,2000);
 	}
 
 	function endReloading(){
-		// simulate loading
-		// for (var c=lastRow;c<lastRow+10;c++)
-		// {
-		// 	table.appendRow({title:"Row "+c});
-		// }
-		// lastRow += 10;
-
 		// when you're done, just reset
 		table.setContentInsets({top:0},{animated:true});
 		reloading = false;
@@ -157,8 +205,8 @@ exports.showView = function(){
 		else if((offset > -65.0 && offset < 0 ) && pulling && !reloading)
 		{
 			pulling = false;
-			var t = Ti.UI.create2DMatrix();
-			arrow.animate({transform:t,duration:180});
+			var s = Ti.UI.create2DMatrix();
+			arrow.animate({transform:s,duration:180});
 			statusLabel.text = "Pull down to refresh...";
 		}    
 	});
@@ -255,7 +303,7 @@ exports.showView = function(){
 			width:'auto',
 			textAlign:'left',
 			// top:2,
-			left:40,
+			left:10,
 			height:'auto'
 		});
 
@@ -266,7 +314,7 @@ exports.showView = function(){
 			width:'auto',
 			textAlign:'left',
 			// bottom:0,
-			left:150,
+			left:130,
 			height:'auto'
 		});
 		

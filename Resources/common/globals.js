@@ -4,7 +4,7 @@ var Polarium = require('/common/polarium_api').Polarium;
 var GV  =
 {
     sessionID: '',
-    currentWorkItemQueryID: '',
+    currentWorkItemQueryID: 1,
     currentFull: '',
     previousFull: '',
     currentMaster: '',
@@ -28,6 +28,64 @@ var GV  =
             }
         }
 	},
+    saveQueryData : function(type, value) {
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        Ti.API.log('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
+        
+        if (type === 'Name') {
+            
+            db.execute('UPDATE OR REPLACE queries SET name = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if (type === 'Title') {
+            
+            db.execute('UPDATE OR REPLACE queries SET title = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Status'){
+            
+            db.execute('UPDATE OR REPLACE queries SET status = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Type'){
+            
+            db.execute('UPDATE OR REPLACE queries SET type = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Due Date'){
+            
+            db.execute('UPDATE OR REPLACE queries SET duedate = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Timepoint'){
+            
+            db.execute('UPDATE OR REPLACE queries SET timepoint = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Author'){
+            
+            db.execute('UPDATE OR REPLACE queries SET author = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Assignables'){
+            
+            db.execute('UPDATE OR REPLACE queries SET assignables = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        } else if(type === 'Custom'){
+            
+            db.execute('UPDATE OR REPLACE queries SET custom = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            
+        }
+
+        db.close();
+
+    },
+    getWorkitems : function(argument) {
+        loginThen(function() {
+            var ok = function(workitems) {
+                Ti.API.log('we got ' + workitems.length + 'workitems :)');
+            };
+            var error = function(argument) {
+                Ti.API.log("error - couldn't get workitems :()");
+            };
+            Polarium.trackerService.queryWorkitems("status:draft","id", ["id", "title", "status", "created", "description"], ok, error);
+        });
+    },
 	login : function(argument){
         loginThen(argument);	    
 	},
@@ -41,7 +99,7 @@ var GV  =
         Polarium.sessionService.logout(ok,error);
 	},
 	getprojects : function(argument) {
-	    loginThen(function() {
+	    loginThen(function(){
             var ok = function(projects) {
                 Ti.API.log(projects);
             };
@@ -49,6 +107,17 @@ var GV  =
                 Ti.API.log("error - couldn't get projects");
             };
             Polarium.projectService.getProjects(ok, error);
+        });
+	},
+	getAssignables : function(){
+	    loginThen(function(){
+            var ok = function(assignables) {
+                Ti.API.log(assignables);
+            };
+            var error = function(argument) {
+                Ti.API.log("error - couldn't get projects");
+            };
+            Polarium.trackerService.getAssignables(ok, error);
         });
 	}
 	

@@ -442,7 +442,7 @@ Polarium.trackerService.queryWorkitems = function(query, sort, fields, callback,
     );
 };
     
-Polarium.trackerService.getAssignables = function(workitemid, callback, errorcallback) {
+Polarium.trackerService.getAssignables = function(callback, errorcallback) {
     
     Polarium.SOAP.send(
             Polarium.connection.getTrackerService(),
@@ -453,6 +453,7 @@ Polarium.trackerService.getAssignables = function(workitemid, callback, errorcal
                 fieldstr+
             "</queryWorkItems>",
             function(data, status, xhr) {
+                alert('success');
                 var nodes = $(xhr.responseXML.getElementsByTagName('queryWorkItemsReturn'));
                 var users = Array();
                 nodes.each(function(i,el) {
@@ -464,15 +465,16 @@ Polarium.trackerService.getAssignables = function(workitemid, callback, errorcal
                 
                 //Debug User
                 if (DEBUG) {
-                    console.log('TrackerService queryWorkitems:')
-                    console.log(nodes)
-                    console.log(workitems);
+                    Ti.API.log('TrackerService queryWorkitems:')
+                    Ti.API.log(nodes)
+                    Ti.API.log(workitems);
                 }
                 
                 //Return Project
                 callback(users);
             },
             function(msg, data) {
+                alert('error');
                 //call api error handler with further callback of application layer
                 apiErrorHandler(msg, errcode, errorcallback);
             }

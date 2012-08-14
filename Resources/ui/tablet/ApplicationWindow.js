@@ -316,9 +316,10 @@ exports.ApplicationWindow = function() {
 			if( notificationData.modalType === 'query' ){
 				//modal window for setting the values for the query
 				
+				var title = notificationData.modalTitle;
 				//create modal window
 				var modalWindow = Ti.UI.createWindow({
-					title: notificationData.modalTitle,
+					title: title,
 					backgroundColor:'white',
 					barColor:'#336699'
 				});
@@ -333,6 +334,121 @@ exports.ApplicationWindow = function() {
 					visible: true
 				});
 				
+				//modal window logic
+				//variable to save textfield data to database
+				var queryData = {};
+				
+				if (title === 'Name') {
+                    
+                    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);
+                } else if (title === 'Title') {
+				    
+                    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+				    modalView.add(queryData.textfield);
+				} else if (title === 'Status'){
+				    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);  
+				} else if (title === 'Due Date'){
+				    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);   
+                } else if (title === 'Timepoint'){
+                    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);   
+                } else if (title === 'Type'){
+                    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);   
+                } else if (title === 'Author'){
+                    
+                    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);
+                    
+                } else if (title === 'Assignables'){
+                    queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield);  
+                } else if (title === 'Custom'){
+					queryData.textfield = Ti.UI.createTextField({
+                        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                        color: '#336699',
+                        hintText: title,
+                        width: 250, height: 'auto',
+                        // value: serverURL,
+                        autocorrect: false 
+                    });
+                    modalView.add(queryData.textfield); 
+                }
+
+				//create submit button
+				var submitButton = Ti.UI.createButton({
+					title:'Submit',
+					width:100,
+					height:30
+				});
+
+				//set the callback of the submit button
+				submitButton.callback = function () {
+				    //TODO reload workitems
+				    VARS.GV.saveQueryData(title, queryData.textfield.getValue());
+				    modalWindow.close();
+				    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+				};
+
 				//create cancel button
 				var cancelButton = Ti.UI.createButton({
 					title:'Cancel',
@@ -343,18 +459,6 @@ exports.ApplicationWindow = function() {
 				//set the callback of the cancel button
 				cancelButton.callback = function () {
 					modalWindow.close();
-				};
-				
-				//create submit button
-				var submitButton = Ti.UI.createButton({
-					title:'Submit',
-					width:100,
-					height:30
-				});
-				//set the callback of the submit button
-				submitButton.callback = function () {
-				    
-					alert("submit it");
 				};
 
 				//add buttons to the window and hide them

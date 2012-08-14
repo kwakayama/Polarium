@@ -32,7 +32,7 @@ if (Ti.version < 1.8 ) {
 	db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
 
 	//table to store queries
-	db.execute('CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT, captured INTEGER, url TEXT, capturedLat REAL, capturedLong REAL);');
+	db.execute('CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT, title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);');
 	db.close();
 
 	//determine platform and form factor and render approproate components
