@@ -1,19 +1,28 @@
 //private Variables, DEBUG & LOG Fn
 var DEBUG = true;
-var XML = 2;
-var DEBUGLVL = XML;
+var DEBUGXML = true;
+var DEBUGPARSE = false;
 var log = function(str) {
-    Ti.API.debug(str);
-    // if (DEBUG && console && console.log) {
-        // console.log(str);
-    // }
+    Ti.API.log(str);
 };
-var find = function(element,tagname) {
+/**
+ * returns List of Elements. IMPORTANT: Get Items of list via list.item(index). Not via Array[]! <br/>
+ * @param {Object} Element
+ * @param {String} tagname
+ * @param {Function} errorcallback
+ * @param {Boolean} isRequired
+ */
+var finds = function(element,tagname, errorcallback, required) {
     var list = element.getElementsByTagName(tagname);
+    return list;
+};
+var find = function(element,tagname, errorcallback, required) {
+    var list = finds(element,tagname, errorcallback, required);
     var item = list.item(0);
     
     return item;
 };
+
 var text = function(element, tagname, errorcallback, required) {
     var found = find(element, tagname);
     if (found == null) {
@@ -25,8 +34,27 @@ var text = function(element, tagname, errorcallback, required) {
         return "";
     }
     
+    if (DEBUGPARSE) {
+        log(tagname + ": "+found.textContent);
+    }
+    
     return found.textContent;
 };
+
+var attr = function(element, attrname, errorcallback, required) {
+    var attr = element.attributes.getNamedItem(attrname);
+    var attrval = attr.nodeValue;
+    if (element.attributes == null || attr == null || attrval == null ) {
+        //if required = Error, else = Warn
+        if (required != null && required) {
+            apiErrorHandler("Required Attribute of Element is null: "+attrname, 100, errorcallback);
+        } else {
+            apiWarnHandler("Attribute of element is null, returned empty: "+attrname, 100, errorcallback);      
+        }
+    }
+    
+    return attrval;
+}
 
 var apiErrorHandler = function(msg, errcode, callback) {
     log("API ERROR: ["+errcode+"] "+msg);
@@ -93,7 +121,7 @@ Polarium.SOAP = {
                         "</soap:Body>"+
                 "</soap:Envelope>";
                 
-        if (DEBUGLVL === XML) {
+        if (DEBUGXML) {
             log(xml);
         }
         
@@ -109,7 +137,7 @@ Polarium.SOAP = {
                     //get doc
                     var doc = this.responseXML.documentElement;
                     
-                    if (DEBUGLVL === XML) {
+                    if (DEBUGXML) {
                         log(""+this.responseText);
                     }
                     
@@ -141,7 +169,6 @@ Polarium.types = {};
 Polarium.types.WorkItem = function() {
     this.fromElement = function(el, errorcallback) {
         this.id = text(el,'id', errorcallback, true);
-        log(this.id);
         this.title = text(el,'title', errorcallback, true);
         // this.author = text(el,'author'); //TODO: WorkItem.author
         this.created = text(el,'created', errorcallback, true);
@@ -152,6 +179,10 @@ Polarium.types.WorkItem = function() {
         // this.comments = el.find('comments').text();
         // this.attachments = el.find('attachments').text();
         // this.hyperlinks = el.find('hyperlinks').text();
+        
+        //uri
+        this.uri = attr(el, "uri", errorcallback, true);
+        
         log("created WorkItem from Element: "+this.id);
         return this;
     }
@@ -165,7 +196,54 @@ Polarium.types.WorkItem = function() {
     this.comments = [];
     this.attachments = [];
     this.hyperlinks = [];
+    this.uri = "";
 };
+
+Polarium.types.Property = function() {
+    this.key = "";
+    this.value = "";
+    this.fromElement = function(el, error) {
+        this.key = text(el,'key', error, true);
+        this.value = text(el,'value', error, true);
+        return this;
+    }
+}
+
+Polarium.types.EnumOption = function() {
+    //String Output
+    this.toString = function() {
+        
+    };
+    //construct from XML NodeElement
+    this.fromElement = function(el, error) {
+        
+        this.enumid = text(el,'enumId', error, true);
+        this.isDefault = text(el,'default', error, true);
+        this.hidden = text(el,'hidden', error, true);
+        this.name = text(el,'name', error, true);
+        this.phantom = text(el,'phantom', error, true);
+        this.sequencenumber = text(el,'default', error, true);
+        
+        //Properties, each Property
+        var props = finds(el,'property',error, true);
+        for (var i=0; i<props.length; i++) {
+            var prop = new Polarium.types.Property;
+            this.properties[i] = prop.fromElement(props.item(i), error);
+        }
+
+        return this;
+    };
+    
+    this.enumid = "";
+    this.isDefault = "";
+    this.hidden = "";
+    this.id = "";
+    this.name = "";
+    this.phantom = "";
+    this.sequencenumber = "";
+    this.properties = [];
+    
+}
 
 Polarium.types.Project = function() {
     this.toString = function() {
@@ -185,7 +263,7 @@ Polarium.types.Project = function() {
         // this.lead = find(lead,'id').textContent;
         this.isResolved = true; //should be overridden if not. (e.g. in getProjects by projectGroups)
         
-        Ti.API.log('created project object: '+this.id);
+        console.log('created project object: '+this.id);
         return this;
     };
     this.id = "";
@@ -201,18 +279,20 @@ Polarium.types.Project = function() {
     return this;
 };
 
-Polarium.types.User = {
-    fromElement: function(el) {
-        this.id = el.find('id').text();
-        this.name = el.find('name').text();
-        this.voteuris = el.find('voteuris').text();
-        this.watchuris = el.find('voteuris').text();
+Polarium.types.User = function() {
+    this.fromElement = function(el, errorcallback) {
+        //TODO: check unresolvable attr! of el
+        this.id = text(el,'id', errorcallback, true);
+        this.name = text(el,'name', errorcallback, true);
+        //TODO: parse Vote & Watch Sublist
+        this.voteuris = text(el,'voteuris', errorcallback, false);
+        this.watchuris = text(el,'watcheURIs', errorcallback, false);
         return this;
-    },
-    id: "",
-    name: "",
-    voteuris: "",
-    watchuris: ""
+    };
+    this.id = "";
+    this.name = "";
+    this.voteuris = "";
+    this.watchuris = "";
 };
 
 /*
@@ -245,21 +325,19 @@ Polarium.sessionService = {
             var head = doc.getFirstChild();
             //get session id
             sessionid = head.getText();
+            
             //save session
             this.session = sessionid;
             this.isLogin = true;
             
             //log
-            Ti.API.log("login success. session: "+sessionid);
+            log("login success. session: "+sessionid);
             
             //call futher delegation callback
             donecallback(sessionid);
         };
         
         var loginerrdelegate = function(msg, errcode) {
-            //call for error handling
-            donecallback(null);
-            
             this.session = null;
             this.isLogin = false;
             
@@ -365,7 +443,8 @@ Polarium.projectService.getUser = function(userid, callback, errorcallback) {
 };
 
 Polarium.projectService.getProjects = function(callback, errorcallback) {
-    Ti.API.log("--- projectService: getProjects ---");
+    log("--- projectService: getProjects ---");
+    
     Polarium.SOAP.send(
             Polarium.connection.getProjectService(),
             sessionid, 
@@ -386,7 +465,7 @@ Polarium.projectService.getProjects = function(callback, errorcallback) {
                 }
                 
                 //Debug 
-                Ti.API.log("projects returned: "+projects.length);
+                log("projects returned: "+projects.length);
                 
                 //Return 
                 callback(projects);
@@ -402,6 +481,19 @@ Polarium.projectService.getProjects = function(callback, errorcallback) {
  * Tracker Web Service 
  */
 Polarium.trackerService = {};
+
+/**
+ * Query WorkItems with Sort Criterium and Array of wanted Fields. <br/>
+ * Do not forget, that WorkItems will only have fields resolved which where requested!
+ * 
+ * Default fields if Param null: id
+ * 
+ * @param {Object} query
+ * @param {Object} sort
+ * @param {Object} fields if null default fields
+ * @param {Object} callback
+ * @param {Object} errorcallback
+ */
 Polarium.trackerService.queryWorkitems = function(query, sort, fields, callback, errorcallback) {
     log('--- TrackerService queryWorkitems ---');
     
@@ -442,39 +534,63 @@ Polarium.trackerService.queryWorkitems = function(query, sort, fields, callback,
     );
 };
     
-Polarium.trackerService.getAssignables = function(callback, errorcallback) {
-    
+Polarium.trackerService.getAllowedAssignees = function(workitemuri, callback, errorcallback) {
     Polarium.SOAP.send(
             Polarium.connection.getTrackerService(),
             sessionid, 
-            "<queryWorkItems>"+
-                "<query>"+query+"</query>"+
-                "<sort>"+sort+"</sort>"+
-                fieldstr+
-            "</queryWorkItems>",
-            function(data, status, xhr) {
-                alert('success');
-                var nodes = $(xhr.responseXML.getElementsByTagName('queryWorkItemsReturn'));
+            "<getAllowedAssignees>"+
+                "<workitemURI>"+workitemuri+"</workitemURI>"+
+            "</getAllowedAssignees>",
+            function(doc) {
+                var nodes = doc.getElementsByTagName('getAllowedAssigneesReturn');
                 var users = Array();
-                nodes.each(function(i,el) {
-                    user = new Polarium.types.WorkItem;
-                    user.fromElement($(el));
-                    users[i] = user;
-                    
-                });
-                
-                //Debug User
-                if (DEBUG) {
-                    Ti.API.log('TrackerService queryWorkitems:')
-                    Ti.API.log(nodes)
-                    Ti.API.log(workitems);
+                var u;
+                for(var i=0, j=nodes.length; i<j; i++) {
+                    var node = nodes.item(i);
+                    u = new Polarium.types.User;
+                    u.fromElement(node, errorcallback);
+                    users[i] = u;
                 }
+                
+                //Debug 
+                log("users returned: "+users.length);
                 
                 //Return Project
                 callback(users);
             },
-            function(msg, data) {
-                alert('error');
+            function(msg, code) {
+                //call api error handler with further callback of application layer
+                apiErrorHandler(msg, errcode, errorcallback);
+            }
+    );
+};
+
+Polarium.trackerService.getAllEnumOptionsForId = function(projectid, enumid, callback, errorcallback) {
+    Polarium.SOAP.send(
+            Polarium.connection.getTrackerService(),
+            sessionid, 
+            "<getAllEnumOptionsForId>"+
+                "<projectID>"+projectid+"</projectID>"+
+                "<enumID>"+enumid+"</enumID>"+
+            "</getAllEnumOptionsForId>",
+            function(doc) {
+                var nodes = doc.getElementsByTagName('getAllEnumOptionsForIdReturn');
+                var enumoptions = Array();
+                var enumoption;
+                for(var i=0, j=nodes.length; i<j; i++) {
+                    var node = nodes.item(i);
+                    enumoption = new Polarium.types.EnumOption;
+                    enumoption.fromElement(node, errorcallback);
+                    enumoptions[i] = enumoption;
+                }
+                
+                //Debug 
+                log("enumoptions returned: "+enumoptions.length);
+                
+                //Return Project
+                callback(enumoptions);
+            },
+            function(msg, code) {
                 //call api error handler with further callback of application layer
                 apiErrorHandler(msg, errcode, errorcallback);
             }
