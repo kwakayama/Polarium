@@ -19,7 +19,7 @@ function checkLable(title){
 
     //retrieve data
     var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', VARS.GV.currentWorkItemQueryID);
-
+    
     //create result object
     var result;
 
@@ -40,7 +40,7 @@ function checkLable(title){
         db.close();
 
         if (title === 'Name'){
-            return (result.name !== '' && result.name !== null) ? result.name : 'Query';
+            return (result.name !== '' && result.name !== null) ? result.name : 'new Query';
         } else if (title === 'Title'){
 			return (result.title !== '' && result.title !== null) ? result.title : 'alle';
         } else if(title === 'Status'){
@@ -148,7 +148,7 @@ exports.createView = function() {
 exports.showView = function(){
 	
 	var lbl = Ti.UI.createLabel({
-		top:11,
+		top:10,
 		font: { fontWeight:'bold',fontSize:24 },
 		text: checkLable('Name')
 	});

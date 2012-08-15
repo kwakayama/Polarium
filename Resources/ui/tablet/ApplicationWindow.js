@@ -76,8 +76,27 @@ exports.ApplicationWindow = function() {
             var refreshButton = Ti.UI.createButton({
                 systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
             });
-            var saveButton = Ti.UI.createButton({title:'Save'});
-            self.setToolbar([saveButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,flexSpace]);
+            var newButton = Ti.UI.createButton({title:'New'});
+            self.add(newButton);
+            newButton.hide();
+            newButton.callback = function(argument) {
+
+                //open database
+                var db = Ti.Database.open('PolarionApp');
+                db.execute('INSERT INTO queries DEFAULT VALUES');
+                
+                //get count of table
+                
+                var count = db.lastInsertRowId;
+                
+                db.close();
+                
+                VARS.GVUpdate('currentWorkItemQueryID',count);
+                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
+                
+            };
+            self.setToolbar([newButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,flexSpace]);
             
         } else{
             //show blank toolbar        
@@ -160,7 +179,7 @@ exports.ApplicationWindow = function() {
 
 	//create master view container
 	var masterContainer = Ti.UI.createView({
-		top:-1, //workaround to hide the upper edge (black)
+		top:0,
 		bottom:0,
 		left:0,
 		width:240,
@@ -475,6 +494,7 @@ exports.ApplicationWindow = function() {
 				    VARS.GV.saveQueryData(title, queryData.textfield.getValue());
 				    modalWindow.close();
 				    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+				    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
 				};
 
 				//create cancel button

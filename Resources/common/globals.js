@@ -75,6 +75,39 @@ var GV  =
         db.close();
 
     },
+    //function to get all saved queries
+    getQueries : function() {
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        //create a return object
+        var result = [];    
+        
+        //retrieve data
+        var rows = db.execute('SELECT * FROM queries');
+        
+        while (rows.isValidRow()){
+            var id = rows.fieldByName('id');
+            Ti.API.log('id: '+id+' - name: '+rows.fieldByName('name'));
+            query = {
+                custom : rows.fieldByName('custom'),
+                id : rows.fieldByName('id'),
+                name : rows.fieldByName('name'),
+                title : rows.fieldByName('title'),
+                status : rows.fieldByName('status'),
+                duedate : rows.fieldByName('duedate'),
+                timepoint : rows.fieldByName('timepoint'),
+                type : rows.fieldByName('type'),
+                author : rows.fieldByName('author'),
+                assignables : rows.fieldByName('assignables')
+            };
+            result.push(query);
+            rows.next();
+        }
+        rows.close();
+        db.close();
+        return result;
+    },
     //Funktion make a request with the currentWorkitemID
     getWorkitems : function(mycall) {        
         loginThen(function() {
@@ -208,12 +241,16 @@ var getQueryById = function(id){
 function queryHelper(title, value){
     var result;
     //expert mode ;)
-    if (value === 'custom') {
-        
+    if (title === 'custom') {
+        if (value === '' || value === null) {
+            result = 'NOT '+title+':######NULL';
+        } else{
+            result = value;
+        }
     }else{
         //is the value empty or null then set value to search ALL
         if (value === '' || value === null) {
-            result = 'NOT '+title+'######NULL';
+            result = 'NOT '+title+':######NULL';
         } else{
             result = title+':'+value;
         }    

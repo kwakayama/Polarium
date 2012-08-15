@@ -31,23 +31,68 @@ exports.createView = function() {
 
 
 // Show View
-exports.showView = function(){
-	
-	var lbl = Ti.UI.createLabel({
-		text:'Please select an item',
-		height:'auto',
-		width:'auto',
-		color:'#000'
-	});
+exports.showView = function(arguments){
+    
+    //get queries from database
+    var queries = VARS.GV.getQueries();
+    
+    var lbl = Ti.UI.createLabel({
+        top:10,
+        height:'auto',
+        font: { fontWeight:'bold',fontSize:24 },
+        text:'Your saved Queries:'
+    });
+    self.add(lbl);
+    
+    table = Ti.UI.createTableView({
+        top:10,
+        rowHeight:50
+        // data:tableData
+    });
+    
+    var customTableData = [];
+    var i;    
+    for(i=0,j=queries.length; i<j; i++){
+        var row = Titanium.UI.createTableViewRow({
+            height:50
+        });
+        var rowTitle = Titanium.UI.createLabel({
+            text: queries[i].name,
+            font:{fontSize:18,fontWeight:'bold'},
+            height:'auto',
+            width:'auto',
+            textAlign:'left',
+            top:20,
+            left:50,
+            wordWrap:true,
+            height:'auto'
+        });
+        row.add(rowTitle);
+        
+        //variable to store query id
+        row.id = queries[i].id;
+        rowTitle.id = queries[i].id;
+        
+        row.callback = function(e) {
+            //set the current workitem id and navigate to the workitem view
+            VARS.GVUpdate('currentWorkItemQueryID',this.id);
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
+        };
+        rowTitle.callback = function(e) {
+          //set the current workitem id and navigate to the workitem view
+            VARS.GVUpdate('currentWorkItemQueryID',this.id);
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
+        };
 
-	lbl.callback = function(){
-		alert("es geht doch");
-	};
-
-	self.add(lbl);
-	
-	// Show Stuff
-	self.show();
+        customTableData.push(row);
+    }
+    table.setData(customTableData);
+    
+    // Show Stuff
+    self.add(table);
+    self.show();
 };
 
 

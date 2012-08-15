@@ -32,7 +32,16 @@ if (Ti.version < 1.8 ) {
 	db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
 
 	//table to store queries
-	db.execute('CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT, title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);');
+	db.execute('CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT default \'new Query\', title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);');
+	
+	//get count of queries
+    var rows = db.execute('SELECT COUNT(*) FROM queries');
+    var count = rows.field(0);
+    //initialize the first querie if it doesn't exist
+    if (count === 0) {
+        db.execute('INSERT INTO queries DEFAULT VALUES');
+    }
+	
 	db.close();
 
 	//determine platform and form factor and render approproate components
