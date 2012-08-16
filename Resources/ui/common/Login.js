@@ -179,12 +179,10 @@ exports.showView = function(){
 			VARS.GV.login(function(sessionid) {
 			    if (sessionid !== null) {
 			        
-			        Ti.API.log("sessionid: "+sessionid);
+			        Ti.API.log("sessionid: "+sessionid);			        
+			        //open modal window to choose project
+			        Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'chooseProject', 'modalTitle':'Choose Project', 'params':'' } });
 			        
-			        VARS.GV.getprojects();
-                    
-                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
-                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
                     
                 }else {
                     alert('sorry, can not log in');

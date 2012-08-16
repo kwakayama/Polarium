@@ -4,8 +4,6 @@ Logfile initialized
 [INFO] Building PolarionApp for Android ... one moment
 [INFO] Titanium SDK version: 2.0.1 (04/12/12 16:33 999c68a)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 1 devices/emulators
-[INFO] Android Emulator has exited
 [TRACE] adb devices returned 0 devices/emulators
 [TRACE] adb devices returned 0 devices/emulators
 [TRACE] adb devices returned 0 devices/emulators

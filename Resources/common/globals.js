@@ -110,7 +110,7 @@ var GV  =
     },
     //Funktion make a request with the currentWorkitemID
     getWorkitems : function(mycall) {        
-        loginThen(function() {
+        this.loginThen(function() {
             
             //get current query out of the database
             var query = getQueryById(GV.currentWorkItemQueryID);
@@ -126,7 +126,7 @@ var GV  =
         });
     },
 	login : function(argument){
-        loginThen(argument);	    
+        this.loginThen(argument);	    
 	},
 	logout : function(argument) {
         var ok = function(workitems) {
@@ -138,18 +138,21 @@ var GV  =
         Polarium.sessionService.logout(ok,error);
 	},
 	getprojects : function(argument) {
-	    loginThen(function(){
+	    
+	    this.loginThen(function() {
+            Ti.API.log('global getprojects');
             var ok = function(projects) {
+                Ti.API.log('start');
                 Ti.API.log(projects);
             };
-            var error = function(argument) {
+            var error = function(argument){
                 Ti.API.log("error - couldn't get projects");
             };
             Polarium.projectService.getProjects(ok, error);
         });
 	},
 	getAssignables : function(){
-	    loginThen(function(){
+	    this.loginThen(function(){
             var ok = function(assignables) {
                 Ti.API.log(assignables);
             };
@@ -158,17 +161,27 @@ var GV  =
             };
             Polarium.trackerService.getAssignables(ok, error);
         });
-	}
-	
-};
-
-var loginThen = function(then) {
-    credentials = getCredentials();
-    Polarium.sessionService.login(
-        credentials.username,
-        credentials.pwd,
-        function(arg) { then(arg); }, 
-        function(err) { alert(err); });
+	},
+	getAllEnumOptionsForId : function(argument) {
+        this.loginThen(function() {
+            var ok = function(enumoptions) {
+                Ti.API.log("OK getAllEnumOptionsForId");
+                alert(enumoptions);
+            };
+            var error = function(argument) {
+              alert('error');
+            };
+            Polarium.trackerService.getAllEnumOptionsForId("elibrary", "type", ok, error);
+        });
+	},
+	loginThen : function(then) {
+        credentials = getCredentials();
+        Polarium.sessionService.login(
+            credentials.username,
+            credentials.pwd,
+            function(arg) { then(arg); }, 
+            function(err) { alert(err); });
+    }
 };
 
 // function to retrieve values form the database
@@ -227,7 +240,7 @@ var getQueryById = function(id){
             custom : queryData.fieldByName('custom')
         };
         
-        query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom);
+        query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom)+' AND '+queryHelper('assignee.id',result.assignables)+' AND '+queryHelper('author.id',result.author);
         
         Ti.API.log('query: '+query);
             

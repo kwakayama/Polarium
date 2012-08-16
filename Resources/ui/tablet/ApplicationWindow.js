@@ -76,6 +76,18 @@ exports.ApplicationWindow = function() {
             var refreshButton = Ti.UI.createButton({
                 systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
             });
+            var logBtn = Ti.UI.createButton({title:'Logout'});
+            logBtn.callback = function(){
+                //Navigate  to Login View
+                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+                
+                //fire polarium logout request
+                VARS.GV.logout();
+            };
+            logBtn.hide();
+            self.add(logBtn);
+            
+            
             var newButton = Ti.UI.createButton({title:'New'});
             self.add(newButton);
             newButton.hide();
@@ -96,8 +108,24 @@ exports.ApplicationWindow = function() {
                 Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
                 
             };
-            self.setToolbar([newButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,flexSpace]);
+            self.setToolbar([newButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,logBtn]);
             
+        } else if(type === 'logout'){
+            
+            var logBtn = Ti.UI.createButton({title:'Logout'});
+            
+            logBtn.callback = function(){
+                //Navigate  to Login View
+                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+                
+                //fire polarium logout request
+                VARS.GV.logout();
+            };
+            
+            logBtn.hide();
+            self.add(logBtn);
+            
+            self.setToolbar([flexSpace,flexSpace,flexSpace,flexSpace,flexSpace,flexSpace,logBtn]);
         } else{
             //show blank toolbar        
             self.setToolbar([flexSpace]);
@@ -154,7 +182,7 @@ exports.ApplicationWindow = function() {
 		barColor:'#336699',
 		tabBarHidden:true
 	});
-	showToolbar();
+    showToolbar();
         
 	// create tab group  
 	var tabGroup = Titanium.UI.createTabGroup(); 
@@ -231,9 +259,9 @@ exports.ApplicationWindow = function() {
 				if (notificationData.view === 'master') {
 
 					//set logout button
-					setLogoutButton(true);
+					//setLogoutButton(true);
 					setBackButton(false);
-					showToolbar(null);
+					showToolbar('logout');
 
 					//hide views
 					hideAllViews('master');
@@ -250,7 +278,7 @@ exports.ApplicationWindow = function() {
 
 					//set back and logout buttons
 					setBackButton(true);
-					setLogoutButton(true);
+					// setLogoutButton(true);
 					showToolbar('query');
 
 					//hide views
@@ -270,7 +298,8 @@ exports.ApplicationWindow = function() {
 				if(notificationData.view === 'detail') {
 					
 					//set logout button
-					setLogoutButton(true);
+					// setLogoutButton(true);
+					showToolbar('logout');
 
 					//hide views
 					hideAllViews('detail');
@@ -286,7 +315,8 @@ exports.ApplicationWindow = function() {
 				} else if(notificationData.view === 'settings') {
                     
                     //set logout and back button
-                    setLogoutButton(true);
+                    // setLogoutButton(true);
+                    showToolbar('logout');
                     setBackButton(true);
 
                     //hide views
@@ -303,7 +333,8 @@ exports.ApplicationWindow = function() {
                 }else if(notificationData.view === 'about') {
                     
                     //set logout and back button
-                    setLogoutButton(true);
+                    // setLogoutButton(true);
+                    showToolbar('logout');
                     setBackButton(true);
 
                     //hide views
@@ -325,7 +356,8 @@ exports.ApplicationWindow = function() {
                         arguments = null;
                     }
 					//set logout button
-					setLogoutButton(true);
+					// setLogoutButton(true);
+					showToolbar('query');
 
 					//hide views
 					hideAllViews('detail');
@@ -345,7 +377,8 @@ exports.ApplicationWindow = function() {
 				if (notificationData.view === 'login') {
 				    
 					//hide logout button
-					setLogoutButton(false);
+					// setLogoutButton(false);
+					showToolbar();
 
 					//hide views
 					hideAllViews('all');
@@ -446,7 +479,10 @@ exports.ApplicationWindow = function() {
                         // value: serverURL,
                         autocorrect: false 
                     });
-                    modalView.add(queryData.textfield);   
+                    modalView.add(queryData.textfield);
+                    
+                    VARS.GV.getAllEnumOptionsForId();
+                       
                 } else if (title === 'Author'){
                     
                     queryData.textfield = Ti.UI.createTextField({
@@ -490,7 +526,6 @@ exports.ApplicationWindow = function() {
 
 				//set the callback of the submit button
 				submitButton.callback = function () {
-				    //TODO reload workitems
 				    VARS.GV.saveQueryData(title, queryData.textfield.getValue());
 				    modalWindow.close();
 				    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
@@ -529,7 +564,91 @@ exports.ApplicationWindow = function() {
 
 			}else if (notificationData.modalType === 'detail') {
 				alert("yeeeeeha detail");
-			}
+			}else if (notificationData.modalType === 'chooseProject') {
+                //modal window for setting the values for the query
+                
+                // VARS.GV.getprojects();
+                
+                var title = notificationData.modalTitle;
+                //create modal window
+                var modalWindow = Ti.UI.createWindow({
+                    title: title,
+                    backgroundColor:'white',
+                    barColor:'#336699'
+                });
+
+                //add to parent window, for using it's eventlistener
+                self.add(modalWindow);
+                
+                //create modal view
+                var modalView = Ti.UI.createView({
+                    backgroundColor: 'transparent',
+                    layout: 'vertical',
+                    visible: true
+                });
+                
+                //modal window logic
+                            
+                var picker = Ti.UI.createPicker({
+                    top:50
+                });
+                
+                var data = [];
+                data[0]=Ti.UI.createPickerRow({title:'E-Library'});
+                data[1]=Ti.UI.createPickerRow({title:'Playground'});
+                data[2]=Ti.UI.createPickerRow({title:'Document Library'});
+                
+                picker.add(data);
+                picker.selectionIndicator = true;        
+                
+                modalView.add(picker);
+                
+
+                //create submit button
+                var submitButton = Ti.UI.createButton({
+                    title:'Submit',
+                    width:100,
+                    height:30
+                });
+
+                //set the callback of the submit button
+                submitButton.callback = function () {
+                    modalWindow.close();
+                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
+                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
+                };
+
+                //create cancel button
+                var cancelButton = Ti.UI.createButton({
+                    title:'Cancel',
+                    width:100,
+                    height:30
+                });
+
+                //set the callback of the cancel button
+                cancelButton.callback = function () {
+                    modalWindow.close();
+                };
+
+                //add buttons to the window and hide them
+                //workaround to get the callback
+                modalView.add(submitButton);
+                modalView.add(cancelButton);
+                submitButton.hide();
+                cancelButton.hide();
+
+                //add modal view to window
+                modalWindow.add(modalView);
+
+                //add buttons to the navigation
+                modalWindow.setLeftNavButton(cancelButton);
+                modalWindow.setRightNavButton(submitButton);
+
+                //0 -> Ti.UI.iPad.MODAL_TRANSITION_STYLE_COVER_VERTICAL
+                //2 -> MODAL_PRESENTATION_FORMSHEET
+                modalWindow.open({modal:true,modalTransitionStyle:0,modalStyle:2,navBarHidden:false});
+                
+            }
 
 		}/*else if(notificationName === "closeView"){
 
@@ -611,15 +730,7 @@ exports.ApplicationWindow = function() {
 	//
 	Ti.Gesture.addEventListener('orientationchange',function(e)
 	{
-		// device orientation
-		// l.text = 'Current Orientation: ' + getOrientation(Titanium.Gesture.orientation);
-		// setLogoutButton(false);
-		// alert(define update/render funktion);
-		// logoutButton.hide();
-		// get orienation from event object
-		//var orientation = getOrientation(e.orientation);
-		
-		//Titanium.API.info("orientation changed = "+orientation+", is portrait?"+e.source.isPortrait()+", orientation = "+Ti.Gesture.orientation + "is landscape?"+e.source.isLandscape());
+		Ti.API.log('not implemented yet');
 	});
 
 	return self;

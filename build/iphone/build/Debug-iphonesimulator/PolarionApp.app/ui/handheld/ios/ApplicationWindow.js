@@ -1,1 +1,0 @@
-/Users/kenta/CODE/Titanium_workspace/PolarionApp/Resources/ui/handheld/ios/ApplicationWindow.js

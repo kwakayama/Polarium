@@ -1,1 +1,0 @@
-/Users/kenta/CODE/Titanium_workspace/PolarionApp/Resources/common/Copy of polarium_api.js
