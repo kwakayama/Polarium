@@ -5,13 +5,9 @@ var GV  =
 {
     sessionID: '',
     currentWorkItemQueryID: 1,
-    currentFull: '',
-    previousFull: '',
-    currentMaster: '',
-    previousMaster: '',
-    currentDetail: '',
-    previousDetail: '',
-	removeAllChildren : function(viewObject){
+    currentStage:'',
+    previousStage:'',
+    removeAllChildren : function(viewObject){
         // alert("type: " + viewObject.type);
         if (typeof viewObject !== 'undefined' && typeof viewObject.children !== 'undefined') {
             //copy array of child object references because view's "children" property is live collection of child object references
@@ -27,8 +23,9 @@ var GV  =
                 }
             }
         }
-	},
+    },
     saveQueryData : function(type, value) {
+        
         //open database
         var db = Ti.Database.open('PolarionApp');
         
@@ -68,12 +65,21 @@ var GV  =
             
         } else if(type === 'Custom'){
             
-            db.execute('UPDATE OR REPLACE queries SET custom = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
-            
+            db.execute('UPDATE OR REPLACE queries SET custom = ? WHERE id IS ?', value, this.currentWorkItemQueryID);  
         }
 
         db.close();
 
+    },
+    //function to delete Query by ID
+    deleteQuery : function(id){
+        
+        Ti.API.log('start deleting query with id: '+id);
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        var result = db.execute('DELETE FROM queries WHERE id IS ?', id);
+        
     },
     //function to get all saved queries
     getQueries : function() {
@@ -125,10 +131,10 @@ var GV  =
             Polarium.trackerService.queryWorkitems(query,"id", ["id", "title", "status", "created", "description"], ok, error);
         });
     },
-	login : function(argument){
-        this.loginThen(argument);	    
-	},
-	logout : function(argument) {
+    login : function(argument){
+        this.loginThen(argument);       
+    },
+    logout : function(argument) {
         var ok = function(workitems) {
             Ti.API.debug("Logout done");
         };
@@ -136,10 +142,10 @@ var GV  =
           alert("error - couldn't logout");
         };
         Polarium.sessionService.logout(ok,error);
-	},
-	getprojects : function(argument) {
-	    
-	    this.loginThen(function() {
+    },
+    getprojects : function(argument) {
+        
+        this.loginThen(function() {
             Ti.API.log('global getprojects');
             var ok = function(projects) {
                 Ti.API.log('start');
@@ -150,9 +156,9 @@ var GV  =
             };
             Polarium.projectService.getProjects(ok, error);
         });
-	},
-	getAssignables : function(){
-	    this.loginThen(function(){
+    },
+    getAssignables : function(){
+        this.loginThen(function(){
             var ok = function(assignables) {
                 Ti.API.log(assignables);
             };
@@ -161,8 +167,8 @@ var GV  =
             };
             Polarium.trackerService.getAssignables(ok, error);
         });
-	},
-	getAllEnumOptionsForId : function(argument) {
+    },
+    getAllEnumOptionsForId : function(argument) {
         this.loginThen(function() {
             var ok = function(enumoptions) {
                 Ti.API.log("OK getAllEnumOptionsForId");
@@ -173,8 +179,8 @@ var GV  =
             };
             Polarium.trackerService.getAllEnumOptionsForId("elibrary", "type", ok, error);
         });
-	},
-	loginThen : function(then) {
+    },
+    loginThen : function(then) {
         credentials = getCredentials();
         Polarium.sessionService.login(
             credentials.username,
@@ -274,7 +280,7 @@ function queryHelper(title, value){
 
 exports.GVUpdate  = function( globalVarName, globalVarValue )
 {
-    this.GV[globalVarName]	  =   globalVarValue;
+    this.GV[globalVarName]    =   globalVarValue;
 };
 
 exports.GV = GV;
