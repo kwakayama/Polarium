@@ -74,17 +74,26 @@ var GV  =
     //function to delete Query by ID
     deleteQuery : function(id){
         
-        Ti.API.log('start deleting query with id: '+id);
+        Ti.API.log('start deleting query with id: ' + id + 'currentworkitemid: '+this.currentWorkItemQueryID);
         
-        if (id === this.currentWorkItemQueryID) {
-            currentWorkItemQueryID = null;
-            //TODO FIX THIS
-        }
         //open database
         var db = Ti.Database.open('PolarionApp');
         
+        if(id === this.currentWorkItemQueryID){
+            this.currentWorkItemQueryID = 1;            
+        }
+        
         var result = db.execute('DELETE FROM queries WHERE id IS ?', id);
         
+        //get count of queries
+        var rows = db.execute('SELECT COUNT(*) FROM queries');
+        var count = rows.field(0);
+        //initialize the first querie if it doesn't exist
+        if (count === 0) {
+            db.execute('INSERT INTO queries DEFAULT VALUES');
+        }
+        
+        db.close();        
     },
     //function to get all saved queries
     getQueries : function() {
