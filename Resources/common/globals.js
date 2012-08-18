@@ -75,6 +75,11 @@ var GV  =
     deleteQuery : function(id){
         
         Ti.API.log('start deleting query with id: '+id);
+        
+        if (id === this.currentWorkItemQueryID) {
+            currentWorkItemQueryID = null;
+            //TODO FIX THIS
+        }
         //open database
         var db = Ti.Database.open('PolarionApp');
         
