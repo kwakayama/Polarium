@@ -1,4 +1,9 @@
 tmp
-*.class
-*.pyc
-*.pyo
+build
+build/*
+build/iphone/*
+build/android/*
+.DS_Store
+.settings
+build.log
+.fastdev.lock
