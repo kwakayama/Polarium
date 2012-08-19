@@ -1,11 +1,12 @@
 var Polarium = require('/common/polarium_api').Polarium;
+var CryptoJS  = require('/common/aes').CryptoJS;
 
 // Common Global Variables
 var GV  =
 {
     sessionID: '',
     currentWorkItemQueryID: 1,
-    currentStage:'',
+    currentStage:'login',
     previousStage:'',
     removeAllChildren : function(viewObject){
         // alert("type: " + viewObject.type);
@@ -29,43 +30,43 @@ var GV  =
         //open database
         var db = Ti.Database.open('PolarionApp');
         
-        Ti.API.log('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
+        alert('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
         
         if (type === 'Name') {
             
-            db.execute('UPDATE OR REPLACE queries SET name = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET name = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if (type === 'Title') {
             
-            db.execute('UPDATE OR REPLACE queries SET title = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET title = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if(type === 'Status'){
             
-            db.execute('UPDATE OR REPLACE queries SET status = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
-            
+            db.execute("UPDATE OR REPLACE queries SET status = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
+                        
         } else if(type === 'Type'){
             
-            db.execute('UPDATE OR REPLACE queries SET type = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET type = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if(type === 'Due Date'){
             
-            db.execute('UPDATE OR REPLACE queries SET duedate = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET duedate = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if(type === 'Timepoint'){
             
-            db.execute('UPDATE OR REPLACE queries SET timepoint = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET timepoint = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if(type === 'Author'){
             
-            db.execute('UPDATE OR REPLACE queries SET author = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET author = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if(type === 'Assignables'){
             
-            db.execute('UPDATE OR REPLACE queries SET assignables = ? WHERE id IS ?', value, this.currentWorkItemQueryID);
+            db.execute("UPDATE OR REPLACE queries SET assignables = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);
             
         } else if(type === 'Custom'){
             
-            db.execute('UPDATE OR REPLACE queries SET custom = ? WHERE id IS ?', value, this.currentWorkItemQueryID);  
+            db.execute("UPDATE OR REPLACE queries SET custom = '"+this.encrypt(value)+"' WHERE id IS " + this.currentWorkItemQueryID);  
         }
 
         db.close();
@@ -110,16 +111,16 @@ var GV  =
             var id = rows.fieldByName('id');
             Ti.API.log('id: '+id+' - name: '+rows.fieldByName('name'));
             query = {
-                custom : rows.fieldByName('custom'),
+                custom : this.decrypt(rows.fieldByName('custom')),
                 id : rows.fieldByName('id'),
-                name : rows.fieldByName('name'),
-                title : rows.fieldByName('title'),
-                status : rows.fieldByName('status'),
-                duedate : rows.fieldByName('duedate'),
-                timepoint : rows.fieldByName('timepoint'),
-                type : rows.fieldByName('type'),
-                author : rows.fieldByName('author'),
-                assignables : rows.fieldByName('assignables')
+                name : this.decrypt(rows.fieldByName('name')),
+                title : this.decrypt(rows.fieldByName('title')),
+                status : this.decrypt(rows.fieldByName('status')),
+                duedate : this.decrypt(rows.fieldByName('duedate')),
+                timepoint : this.decrypt(rows.fieldByName('timepoint')),
+                type : this.decrypt(rows.fieldByName('type')),
+                author : this.decrypt(rows.fieldByName('author')),
+                assignables : this.decrypt(rows.fieldByName('assignables'))
             };
             result.push(query);
             rows.next();
@@ -128,12 +129,46 @@ var GV  =
         db.close();
         return result;
     },
+    //get query object by id
+    getCurrentQuery : function(){
+        Ti.API.log('---start getCurrentQuery---');    
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+    
+        //retrieve data
+        var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', this.currentWorkItemQueryID);
+        
+        //create result object
+        var result = {};
+    
+        if (queryData.isValidRow()) {
+            result = {
+                name : this.decrypt(queryData.fieldByName('name')),
+                title : this.decrypt(queryData.fieldByName('title')),
+                status : this.decrypt(queryData.fieldByName('status')),
+                duedate : this.decrypt(queryData.fieldByName('duedate')),
+                timepoint : this.decrypt(queryData.fieldByName('timepoint')),
+                type : this.decrypt(queryData.fieldByName('type')),
+                author : this.decrypt(queryData.fieldByName('author')),
+                assignables : this.decrypt(queryData.fieldByName('assignables')),
+                custom : this.decrypt(queryData.fieldByName('custom'))
+            };
+            Ti.API.log('query name: '+this.decrypt(queryData.fieldByName('name'))+' query title: '+this.decrypt(queryData.fieldByName('title')));
+    
+            db.close();
+            return result;
+        
+        } else{
+            db.close();
+            return result;
+        }
+    },
     //Funktion make a request with the currentWorkitemID
     getWorkitems : function(mycall) {        
         this.loginThen(function() {
             
             //get current query out of the database
-            var query = getQueryById(GV.currentWorkItemQueryID);
+            var query = getQueryStringById(GV.currentWorkItemQueryID);
             
             var ok = function(workitems) {
                 Ti.API.log('we got ' + workitems.length + ' workitems :)');
@@ -195,47 +230,78 @@ var GV  =
         });
     },
     loginThen : function(then) {
-        credentials = getCredentials();
+        credentials = this.getCredentials();
         Polarium.sessionService.login(
             credentials.username,
             credentials.pwd,
             function(arg) { then(arg); }, 
             function(err) { alert(err); });
+    },
+    encrypt : function(str){
+    
+    //encrypt string with passphrase
+    var encrypted = CryptoJS.AES.encrypt(str, "Passphrase");
+    return encrypted;
+    
+    },
+    decrypt : function(enc){
+        var result = '';
+        if(enc !== null){
+           Ti.API.log("----start decrypting ----"+enc);
+            //decrypt string with passphrase
+            var decrypted = CryptoJS.AES.decrypt(enc, "Passphrase");
+            //set encoding
+            result = decrypted.toString(CryptoJS.enc.Utf8);
+            Ti.API.log("----done decrypting: "+result);
+        }
+        return result;
+    },
+    saveCredentials : function(login){
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        var encUsername = this.encrypt(login.username);
+        var encPwd = this.encrypt(login.pwd);
+        var encServerUrl = this.encrypt(login.serverURL);
+        Ti.API.log(encUsername + ' - ' + this.decrypt(encUsername));
+//     
+        db.execute("INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,'"+encUsername+"','"+encPwd+"','"+encServerUrl+"')");
+        // Ti.API.log('sqlite: '+'INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,'+login.username+','+login.pwd+','+login.serverURL+')');
+        db.close();
+    },
+    // function to retrieve values form the database
+    // returns an object containing username, pwd, serverURL and projectID
+    getCredentials : function(){
+    
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+    
+        //retrieve data
+        var credentials = db.execute('SELECT * FROM credentials');
+    
+        //create result object
+        var result;
+    
+        if (credentials.isValidRow()) {
+        
+            result = {
+                pwd : GV.decrypt(credentials.fieldByName('pwd')),
+                username : GV.decrypt(credentials.fieldByName('username')),
+                serverURL : GV.decrypt(credentials.fieldByName('serverURL'))
+            };
+        
+        } else{
+            result = null;
+        }
+    
+        db.close();
+    
+        return result;
     }
-};
-
-// function to retrieve values form the database
-// returns an object containing username, pwd, serverURL and projectID
-var getCredentials = function(){
-    
-    //open database
-    var db = Ti.Database.open('PolarionApp');
-
-    //retrieve data
-    var credentials = db.execute('SELECT * FROM credentials');
-
-    //create result object
-    var result;
-
-    if (credentials.isValidRow()) {
-    
-        result = {
-            pwd : credentials.fieldByName('pwd'),
-            username : credentials.fieldByName('username'),
-            serverURL : credentials.fieldByName('serverURL'),
-        };
-    
-    } else{
-        result = null;
-    }
-
-    db.close();
-
-    return result;
 };
 
 // function to retrieve query data form the database
-var getQueryById = function(id){
+var getQueryStringById = function(id){
     
     //open database
     var db = Ti.Database.open('PolarionApp');
@@ -249,15 +315,15 @@ var getQueryById = function(id){
     if (queryData.isValidRow()) {
     
         var result = {
-            name : queryData.fieldByName('name'),
-            title : queryData.fieldByName('title'),
-            status : queryData.fieldByName('status'),
-            duedate : queryData.fieldByName('duedate'),
-            timepoint : queryData.fieldByName('timepoint'),
-            type : queryData.fieldByName('type'),
-            author : queryData.fieldByName('author'),
-            assignables : queryData.fieldByName('assignables'),
-            custom : queryData.fieldByName('custom')
+            name : GV.decrypt(queryData.fieldByName('name')),
+            title : GV.decrypt(queryData.fieldByName('title')),
+            status : GV.decrypt(queryData.fieldByName('status')),
+            duedate : GV.decrypt(queryData.fieldByName('duedate')),
+            timepoint : GV.decrypt(queryData.fieldByName('timepoint')),
+            type : GV.decrypt(queryData.fieldByName('type')),
+            author : GV.decrypt(queryData.fieldByName('author')),
+            assignables : GV.decrypt(queryData.fieldByName('assignables')),
+            custom : GV.decrypt(queryData.fieldByName('custom'))
         };
         
         query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom)+' AND '+queryHelper('assignee.id',result.assignables)+' AND '+queryHelper('author.id',result.author);

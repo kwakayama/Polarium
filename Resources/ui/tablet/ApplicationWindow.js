@@ -183,7 +183,7 @@ exports.ApplicationWindow = function() {
 		tabBarHidden:true
 	});
     showToolbar();
-        
+    
 	// create tab group  
 	var tabGroup = Titanium.UI.createTabGroup(); 
 	
@@ -241,7 +241,7 @@ exports.ApplicationWindow = function() {
 		}else{
 			// Ti.API.log("no callback defined :(");
 			// alert("no "+e.source.type);
-			Ti.API.info("no callback defined");
+			Ti.API.info("no callback defined" + e.source.type);
 		}
 	});
 
@@ -255,7 +255,6 @@ exports.ApplicationWindow = function() {
 			
 			//check type of view
 			if (notificationData.type === 'master') {
-				VARS.GVUpdate('previousMaster' , VARS.GV.currentMaster);
 				if (notificationData.view === 'master') {
 
 					//set logout button
@@ -266,9 +265,6 @@ exports.ApplicationWindow = function() {
 					//hide views
 					hideAllViews('master');
 					hideAllViews('full');
-
-					// Set Current view
-					VARS.GVUpdate( 'currentMaster', 'master' );
 
 					// Show master View
 					masterContainer.show();
@@ -285,17 +281,14 @@ exports.ApplicationWindow = function() {
 					hideAllViews('master');
 					hideAllViews('full');
 
-					// Set Current view
-					VARS.GVUpdate( 'currentMaster', 'queryMaster' );
-
 					// Show master View
 					masterContainer.show();
 					QueryMaster.showView();
 
 				}
 			} else if(notificationData.type === 'detail') {
-				VARS.GVUpdate('previousDetail' , VARS.GV.currentDetail);
 				if(notificationData.view === 'detail') {
+                    VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
 					
 					//set logout button
 					// setLogoutButton(true);
@@ -306,7 +299,8 @@ exports.ApplicationWindow = function() {
 					hideAllViews('full');
 
 					// Set Current view
-					VARS.GVUpdate( 'currentDetail', 'detail' );
+					VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
+					VARS.GVUpdate( 'currentStage', 'dashboard' );
 					
 					// Show detail View
 					detailContainer.show();
@@ -324,14 +318,15 @@ exports.ApplicationWindow = function() {
                     hideAllViews('full');
 
                     // Set Current view
-                    VARS.GVUpdate( 'currentDetail', 'settings' );
+                    VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
+                    VARS.GVUpdate( 'currentStage', 'settings' );
                     
                     // Show detail View
                     detailContainer.show();
                     Settings.showView();
 
                 }else if(notificationData.view === 'about') {
-                    
+                
                     //set logout and back button
                     // setLogoutButton(true);
                     showToolbar('logout');
@@ -342,7 +337,8 @@ exports.ApplicationWindow = function() {
                     hideAllViews('full');
 
                     // Set Current view
-                    VARS.GVUpdate( 'currentDetail', 'about' );
+                    VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
+                    VARS.GVUpdate( 'currentStage', 'about' );
                     
                     // Show detail View
                     detailContainer.show();
@@ -362,10 +358,11 @@ exports.ApplicationWindow = function() {
 					//hide views
 					hideAllViews('detail');
 					hideAllViews('full');
-
-					// Set Current view
-					VARS.GVUpdate( 'currentDetail', 'queryDetail' );
 					
+					// Set Current view
+                    VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
+                    VARS.GVUpdate( 'currentStage', 'query' );
+
 					// Show detail View
 					detailContainer.show();
 					QueryDetail.showView(arguments);
@@ -373,7 +370,7 @@ exports.ApplicationWindow = function() {
 				}
 
 			} else if (notificationData.type === 'full') {
-				VARS.GVUpdate('previousFull' , VARS.GV.currentFull);
+				VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
 				if (notificationData.view === 'login') {
 				    
 					//hide logout button
@@ -383,7 +380,7 @@ exports.ApplicationWindow = function() {
 					//hide views
 					hideAllViews('all');
 					// Set Current view
-					VARS.GVUpdate( 'currentFull', 'login' );
+					VARS.GVUpdate( 'currentStage', 'login' );
 					
 					// Show full View
 					fullwindowContainer.show();
@@ -728,10 +725,10 @@ exports.ApplicationWindow = function() {
 	//
 	// orientation change listener
 	//
-	Ti.Gesture.addEventListener('orientationchange',function(e)
-	{
-		Ti.API.log('not implemented yet');
-	});
+	// Ti.Gesture.addEventListener('orientationchange',function(e)
+	// {
+		// Ti.API.log('not implemented yet '+VARS.GV.currentStage);
+	// });
 
 	return self;
 };

@@ -17,7 +17,10 @@ if (Ti.version < 1.8 ) {
 
 // This is a single context application with mutliple windows in a stack
 (function() {
-
+    
+    // Global VARS
+    var VARS  = require('/common/globals');
+    
 	//setting up the databases
 	//bootstrap the database
 	var db = Ti.Database.open('PolarionApp');
@@ -32,7 +35,7 @@ if (Ti.version < 1.8 ) {
 	db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
 
 	//table to store queries
-	db.execute('CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT default \'new Query\', title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);');
+	db.execute("CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT default '"+VARS.GV.encrypt('new Query')+"', title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);");
 	
 	//get count of queries
     var rows = db.execute('SELECT COUNT(*) FROM queries');

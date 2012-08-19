@@ -14,57 +14,28 @@ exports.type = "master";
 //check if data for query exists in database
 function checkLable(title){
 	
-	//open database
-    var db = Ti.Database.open('PolarionApp');
-
-    //retrieve data
-    var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', VARS.GV.currentWorkItemQueryID);
-    
-    //create result object
-    var result;
-
-    if (queryData.isValidRow()) {
-    
-        result = {
-            name : queryData.fieldByName('name'),
-            title : queryData.fieldByName('title'),
-            status : queryData.fieldByName('status'),
-            duedate : queryData.fieldByName('duedate'),
-            timepoint : queryData.fieldByName('timepoint'),
-            type : queryData.fieldByName('type'),
-            author : queryData.fieldByName('author'),
-            assignables : queryData.fieldByName('assignables'),
-            custom : queryData.fieldByName('custom')
-        };
-
-        db.close();
-
-        if (title === 'Name'){
-            return (result.name !== '' && result.name !== null) ? result.name : 'new Query';
-        } else if (title === 'Title'){
-			return (result.title !== '' && result.title !== null) ? result.title : 'alle';
-        } else if(title === 'Status'){
-			return (result.status !== '' && result.status !== null) ? result.status : 'alle';
-        } else if(title === 'Due Date'){
-			return (result.duedate !== '' && result.duedate !== null) ? result.duedate : 'alle';
-        } else if(title === 'Timepoint'){
-			return (result.timepoint !== '' && result.timepoint !== null) ? result.timepoint : 'alle';
-        } else if(title === 'Type'){
-			return (result.type !== '' && result.type !== null) ? result.type : 'alle';
-        } else if(title === 'Author'){
-			return (result.author !== '' && result.author !== null) ? result.author : 'alle';
-        } else if(title === 'Assignables'){
-			return (result.assignables !== '' && result.assignables !== null) ? result.assignables : 'alle';
-        } else if(title === 'Custom'){
-			return (result.custom !== '' && result.custom !== null) ? result.custom : 'alle';
-        } else{
-			return 'alle';
-        }
-        
-    
+	var result = VARS.GV.getCurrentQuery();
+    Ti.API.log('---check label---'+result);
+    if (title === 'Name'){
+        return (result.name !== '' && result.name !== null && typeof result.name !== 'undefined') ? result.name : 'new Query';
+    } else if (title === 'Title'){
+		return (result.title !== '' && result.title !== null && typeof result.name !== 'undefined') ? result.title : 'alle';
+    } else if(title === 'Status'){
+		return (result.status !== '' && result.status !== null && typeof result.name !== 'undefined') ? result.status : 'alle';
+    } else if(title === 'Due Date'){
+		return (result.duedate !== '' && result.duedate !== null && typeof result.name !== 'undefined') ? result.duedate : 'alle';
+    } else if(title === 'Timepoint'){
+		return (result.timepoint !== '' && result.timepoint !== null && typeof result.name !== 'undefined') ? result.timepoint : 'alle';
+    } else if(title === 'Type'){
+		return (result.type !== '' && result.type !== null && typeof result.name !== 'undefined') ? result.type : 'alle';
+    } else if(title === 'Author'){
+		return (result.author !== '' && result.author !== null && typeof result.name !== 'undefined') ? result.author : 'alle';
+    } else if(title === 'Assignables'){
+		return (result.assignables !== '' && result.assignables !== null && typeof result.name !== 'undefined') ? result.assignables : 'alle';
+    } else if(title === 'Custom'){
+		return (result.custom !== '' && result.custom !== null && typeof result.name !== 'undefined') ? result.custom : 'alle';
     } else{
-		db.close();
-        return 'alle';
+		return 'alle';
     }
 }
 
@@ -133,10 +104,10 @@ exports.createView = function() {
 		visible: false
 	});
 		
-	self.callback = function(){
-		// fire global event
-		Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'params':'' } });
-	};
+	// self.callback = function(){
+		// // fire global event
+		// Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'params':'' } });
+	// };
 	
 	// UI
 	

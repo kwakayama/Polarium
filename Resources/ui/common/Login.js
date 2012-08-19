@@ -28,47 +28,6 @@ exports.createView = function() {
 	return self;
 };
 
-// function to retrieve values form the database
-// returns an object containing username, pwd, serverURL
-function getCredentials(){
-	
-	//open database
-	var db = Ti.Database.open('PolarionApp');
-
-	//retrieve data
-	var credentials = db.execute('SELECT * FROM credentials');
-	//create result object
-	var result;
-
-	if (credentials.isValidRow()) {
-	
-		result = {
-			pwd : credentials.fieldByName('pwd'),
-			username : credentials.fieldByName('username'),
-			serverURL : credentials.fieldByName('serverURL')
-		};
-	
-	} else{
-		result = null;
-	}
-
-	db.close();
-
-	return result;
-}
-
-// function for setting the credentials in the database
-function setCredentials(login){
-	
-	//open database
-	var db = Ti.Database.open('PolarionApp');
-
-	db.execute('INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,?,?,?)', login.username, login.pwd, login.serverURL);
-
-	db.close();
-
-}
-
 //function to validate a URL
 function validateURL(textval) {
       var urlregex = new RegExp(
@@ -99,7 +58,7 @@ exports.showView = function(){
 		serverURL;
 		
 	//check if data is stored in database
-	credentials = getCredentials();
+	credentials = VARS.GV.getCredentials();
 	if (credentials !== null) {
 		username = credentials.username;
 		pwd = credentials.pwd;
@@ -172,8 +131,8 @@ exports.showView = function(){
 		
 		//check input fields
 		if (checkLoginData(loginData) === true) {
-			setCredentials(loginData);
-			
+			// setCredentials(loginData);
+			VARS.GV.saveCredentials(loginData);
 			//log into Polarium
 			//TODO ERROR CASE
 			VARS.GV.login(function(sessionid) {
