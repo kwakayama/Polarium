@@ -42,7 +42,7 @@ function checkLable(title){
 //some dummy data for our table view
 var Data = [
 	{title:'Title', getLable:checkLable, hasChild:true, callback:function function_name () {
-		
+	    
 		//open modal window
 		Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Title', 'params':'' } });
 

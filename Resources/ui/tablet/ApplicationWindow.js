@@ -18,6 +18,8 @@ exports.ApplicationWindow = function() {
 		QueryDetail = require('ui/common/QueryDetail'),
 		Login = require('ui/common/Login'),
 		TemplateView = require('ui/common/TemplateView');
+		
+	var fullwindowContainer, detailContainer, masterContainer;
 
 	var viewControllers = [];
 	var viewContainers = [];
@@ -63,7 +65,6 @@ exports.ApplicationWindow = function() {
 				}				
 			}
 		}
-		
 	};
 	
 	var showToolbar = function(type) {
@@ -171,8 +172,12 @@ exports.ApplicationWindow = function() {
 		hideAllViews('all');
 
 		//show start view
-		fullwindowContainer.show();
-		Login.showView();
+		// fullwindowContainer.show();
+		// Login.showView();
+		masterContainer.show();
+		MasterView.showView();
+        detailContainer.show();
+        DetailView.showView();
 	};
 
 	// create root window
@@ -182,6 +187,7 @@ exports.ApplicationWindow = function() {
 		barColor:'#336699',
 		tabBarHidden:true
 	});
+	
     showToolbar();
     
 	// create tab group  
@@ -201,29 +207,32 @@ exports.ApplicationWindow = function() {
 
 	//Create view containers
 	//create full-window view container
-	var fullwindowContainer = Ti.UI.createView({
-		type:'container'
+	fullwindowContainer = Ti.UI.createView({
+		type:'container',
+		id:'full'
 	});
 
 	//create master view container
-	var masterContainer = Ti.UI.createView({
+	masterContainer = Ti.UI.createView({
 		top:0,
 		bottom:0,
 		left:0,
 		width:240,
-		type:'container'
+		type:'container',
+		id:'master'
 	});
 
 	masterContainer.borderColor = '#000';
 	masterContainer.borderWidth = 1;
 	
 	//create detail view container
-	var detailContainer = Ti.UI.createView({
+	detailContainer = Ti.UI.createView({
 		top:0,
 		bottom:0,
 		right:0,
 		left:240,
-		type:'container'
+		type:'container',
+		id:'detail'
 	});
 
 	viewContainers.push(fullwindowContainer);
@@ -241,7 +250,7 @@ exports.ApplicationWindow = function() {
 		}else{
 			// Ti.API.log("no callback defined :(");
 			// alert("no "+e.source.type);
-			Ti.API.info("no callback defined" + e.source.type);
+			Ti.API.info("no callback defined" + e.source.id);
 		}
 	});
 
@@ -280,6 +289,7 @@ exports.ApplicationWindow = function() {
 					//hide views
 					hideAllViews('master');
 					hideAllViews('full');
+					fullwindowContainer.hide();
 
 					// Show master View
 					masterContainer.show();
@@ -316,6 +326,7 @@ exports.ApplicationWindow = function() {
                     //hide views
                     hideAllViews('detail');
                     hideAllViews('full');
+                    fullwindowContainer.hide();
 
                     // Set Current view
                     VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
@@ -335,6 +346,7 @@ exports.ApplicationWindow = function() {
                     //hide views
                     hideAllViews('detail');
                     hideAllViews('full');
+                    fullwindowContainer.hide();
 
                     // Set Current view
                     VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
@@ -358,6 +370,7 @@ exports.ApplicationWindow = function() {
 					//hide views
 					hideAllViews('detail');
 					hideAllViews('full');
+					fullwindowContainer.hide();
 					
 					// Set Current view
                     VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
@@ -685,50 +698,68 @@ exports.ApplicationWindow = function() {
 			}
 		}
 	};
-
+    
 	var setBackButton = function(visible) {
 		
 		var backButton;
-		var testButton;
+		var haslistener = false;
+		function backFunktion(){
+           //Navigate  Backwards
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });	    
+		}
 		
 		if (visible === true) {
 			
 			//create logout button
 			backButton = Ti.UI.createButton({title:'Back'});
 			
+			backButton.addEventListener('click',backFunktion);
+			
 			// workaround for callback of navButton	
-			self.add(backButton);
+			//self.add(backButton);
 			self.setLeftNavButton(backButton);
-			backButton.hide();
+			//backButton.hide();
+			haslistener=true;
 
-			backButton.callback = function(){
-
-				//Navigate  Backwards
-				Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
-				Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
-
-			};
 
 		} else{
-			if (backButton !== 'undefined') {
-
-				self.setLeftNavButton(null);
-				backButton = null;
+			if (backButton !== 'undefined') {                
+			    if (haslistener ===true) {
+                    backButton.removeEventListener('click',backFunktion);
+                    haslistener = false;    
+			    }
+			    
+                var emptyView = Titanium.UI.createView({});
+                backButton = emptyView;
+                
+				self.setLeftNavButton(backButton);
+				
+				// backButton = null;
 
 			}
 		}
 	};
 	
+	// initialize to all modes
+    self.orientationModes = [
+        Titanium.UI.PORTRAIT,
+        Titanium.UI.UPSIDE_PORTRAIT,
+        Titanium.UI.LANDSCAPE_LEFT,
+        Titanium.UI.LANDSCAPE_RIGHT
+    ]; 
+	
 	//the "real" start
 	createViews();
-
+    
 	//
 	// orientation change listener
 	//
-	// Ti.Gesture.addEventListener('orientationchange',function(e)
-	// {
+	Ti.Gesture.addEventListener('orientationchange',function(e)
+	{
 		// Ti.API.log('not implemented yet '+VARS.GV.currentStage);
-	// });
+		// Ti.App.restart();
+	});
 
 	return self;
 };
