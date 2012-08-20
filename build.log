@@ -1,8 +1,9 @@
 Logfile initialized
-[INFO] logfile = /Users/kenta/CODE/Titanium_workspace/PolarionApp/build.log
-[DEBUG] /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.0.1.GA2/android/builder.py simulator PolarionApp /Users/kenta/android-sdk-macosx /Users/kenta/CODE/Titanium_workspace/PolarionApp de.kw.polarion 1 HVGA 
+[INFO] logfile = /Users/kenta/CODE/Titanium_workspace/PAPP/build.log
+[DEBUG] /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.1.1.GA/android/builder.py simulator PolarionApp /Users/kenta/android-sdk-macosx /Users/kenta/CODE/Titanium_workspace/PAPP de.kw.polarion 1 HVGA 
+[INFO] Android Emulator has exited
 [INFO] Building PolarionApp for Android ... one moment
-[INFO] Titanium SDK version: 2.0.1 (04/12/12 16:33 999c68a)
+[INFO] Titanium SDK version: 2.1.1 (07/27/12 14:01 0fd84a2)
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 0 devices/emulators
 [TRACE] adb devices returned 0 devices/emulators

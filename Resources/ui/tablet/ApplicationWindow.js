@@ -66,6 +66,43 @@ exports.ApplicationWindow = function() {
 			}
 		}
 	};
+		
+	var toogleLoginTab = function(visible){
+	   
+	    // create tab group  
+        var tabGroup = Titanium.UI.createTabGroup(); 
+
+        var LoginWindow = Ti.UI.createWindow({
+                backgroundColor:'#ffffff',
+                url:'ui/common/LoginWindow.js',
+                title:'Login',
+                barColor:'#336699',
+                tabBarHidden:false
+            });
+            
+        // create base UI tab, which will be hidden
+        var tab1 = Titanium.UI.createTab({    
+            title:'Home',  
+            window:self  
+        });
+        
+        loginTab = Titanium.UI.createTab({    
+            title:'Hello',  
+            window:LoginWindow 
+        });
+
+        // add tabs  
+        tabGroup.addTab(tab1);
+        tabGroup.addTab(loginTab);   
+
+
+        // open tab group  
+        tabGroup.open();
+        
+       // if(visible === false){
+           // alert('remove');
+       // }      
+    };
 	
 	var showToolbar = function(type) {
         
@@ -80,8 +117,11 @@ exports.ApplicationWindow = function() {
             var logBtn = Ti.UI.createButton({title:'Logout'});
             logBtn.callback = function(){
                 //Navigate  to Login View
-                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+                // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+                // add tabs  
                 
+                toogleLoginTab();
+                 
                 //fire polarium logout request
                 VARS.GV.logout();
             };
@@ -185,26 +225,12 @@ exports.ApplicationWindow = function() {
 		backgroundColor:'#ffffff',
 		title:'PolarionApp',
 		barColor:'#336699',
-		tabBarHidden:true
+		tabBarHidden:false
 	});
 	
+		
     showToolbar();
-    
-	// create tab group  
-	var tabGroup = Titanium.UI.createTabGroup(); 
-	
-	// create base UI tab, which will be hidden
-	var tab1 = Titanium.UI.createTab({    
-	    title:'Home',  
-	    window:self  
-	});
-
-	// add tabs  
-	tabGroup.addTab(tab1);   
-	  
-	// open tab group  
-	tabGroup.open();
-
+    toogleLoginTab();
 	//Create view containers
 	//create full-window view container
 	fullwindowContainer = Ti.UI.createView({
@@ -576,7 +602,6 @@ exports.ApplicationWindow = function() {
 				alert("yeeeeeha detail");
 			}else if (notificationData.modalType === 'chooseProject') {
                 //modal window for setting the values for the query
-                
                 // VARS.GV.getprojects();
                 
                 var title = notificationData.modalTitle;
@@ -624,8 +649,9 @@ exports.ApplicationWindow = function() {
                 //set the callback of the submit button
                 submitButton.callback = function () {
                     modalWindow.close();
-                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
-                    Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
+                    // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
+                    // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });
+                    toogleLoginTab(false);
                 };
 
                 //create cancel button
@@ -702,9 +728,9 @@ exports.ApplicationWindow = function() {
 	var setBackButton = function(visible) {
 		
 		var backButton;
-		var haslistener = false;
+		var hasBackEventlistener = false;
 		function backFunktion(){
-           //Navigate  Backwards
+           //Navigate to Dashboard
             Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'master', 'type':'master', 'params':'' } });
             Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'detail', 'type':'detail', 'params':'' } });	    
 		}
@@ -715,27 +741,25 @@ exports.ApplicationWindow = function() {
 			backButton = Ti.UI.createButton({title:'Back'});
 			
 			backButton.addEventListener('click',backFunktion);
-			
+			hasBackEventlistener = true;
 			// workaround for callback of navButton	
 			//self.add(backButton);
 			self.setLeftNavButton(backButton);
 			//backButton.hide();
-			haslistener=true;
 
 
 		} else{
-			if (backButton !== 'undefined') {                
-			    if (haslistener ===true) {
+			if (backButton !== 'undefined') {
+                if (hasBackEventlistener === true) {
                     backButton.removeEventListener('click',backFunktion);
-                    haslistener = false;    
-			    }
-			    
-                var emptyView = Titanium.UI.createView({});
-                backButton = emptyView;
+                    hasBackEventlistener = false;   
+                }
                 
-				self.setLeftNavButton(backButton);
+                var emptyView = Titanium.UI.createView({});
+                
+				self.setLeftNavButton(null);
 				
-				// backButton = null;
+				backButton = null;
 
 			}
 		}

@@ -65,6 +65,7 @@ if (Ti.version < 1.8 ) {
 			Titanium.UI.iPhone.hideStatusBar();
 			
 			Window = require('ui/tablet/ApplicationWindow').ApplicationWindow;
+			// Window = require('ui/common/LoginWindow').ApplicationWindow;
 		
 		} else{
 		
