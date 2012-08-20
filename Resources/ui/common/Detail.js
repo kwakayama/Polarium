@@ -8,7 +8,6 @@ var deleteBtnArray = [];
 exports.type = "detail";
 
 function tableDelete (e){
-    var s = e.section;
     queryId = e.row.id;    
     VARS.GV.deleteQuery(queryId);
 }

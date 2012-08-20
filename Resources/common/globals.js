@@ -6,7 +6,7 @@ var GV  =
 {
     sessionID: '',
     currentWorkItemQueryID: 1,
-    currentStage:'login',
+    currentStage:'',
     previousStage:'',
     removeAllChildren : function(viewObject){
         // alert("type: " + viewObject.type);

@@ -12,7 +12,7 @@
 
 //bootstrap and check dependencies
 if (Ti.version < 1.8 ) {
-	alert('Sorry - this application template requires Titanium Mobile SDK 1.8 or later');
+    alert('Sorry - this application template requires Titanium Mobile SDK 1.8 or later');
 }
 
 // This is a single context application with mutliple windows in a stack
@@ -21,72 +21,77 @@ if (Ti.version < 1.8 ) {
     // Global VARS
     var VARS  = require('/common/globals');
     
-	//setting up the databases
-	//bootstrap the database
-	var db = Ti.Database.open('PolarionApp');
-	
-	//don't backup to iCloud
-	db.file.setRemoteBackup(false);
-	
-	//table to store application informations
-	db.execute('CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, name TEXT, value TEXT);');
+    //setting up the databases
+    //bootstrap the database
+    var db = Ti.Database.open('PolarionApp');
+    
+    //don't backup to iCloud
+    db.file.setRemoteBackup(false);
+    
+    //table to store application informations
+    db.execute('CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, name TEXT, value TEXT);');
 
-	//table to store user credentials
-	db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
+    //table to store user credentials
+    db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
 
-	//table to store queries
-	db.execute("CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT default '"+VARS.GV.encrypt('new Query')+"', title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);");
-	
-	//get count of queries
+    //table to store queries
+    db.execute("CREATE TABLE IF NOT EXISTS queries(id INTEGER PRIMARY KEY, name TEXT default '"+VARS.GV.encrypt('new Query')+"', title TEXT, status TEXT, duedate TEXT, timepoint TEXT, type TEXT, author TEXT, assignables TEXT, custom TEXT);");
+    
+    //get count of queries
     var rows = db.execute('SELECT COUNT(*) FROM queries');
     var count = rows.field(0);
     //initialize the first querie if it doesn't exist
     if (count === 0) {
         db.execute('INSERT INTO queries DEFAULT VALUES');
     }
-	
-	db.close();
+    
+    db.close();
 
-	//determine platform and form factor and render approproate components
-	var osname = Ti.Platform.osname,
-		version = Ti.Platform.version,
-		height = Ti.Platform.displayCaps.platformHeight,
-		width = Ti.Platform.displayCaps.platformWidth;
-	
-	//considering tablet to have one dimension over 900px - this is imperfect, so you should feel free to decide
-	//yourself what you consider a tablet form factor for android
-	var isTablet = osname === 'ipad' || (osname === 'android' && (width > 899 || height > 899));
-	
-	var Window;
-	if (isTablet) {
-		if (osname === 'ipad') {
-		
-			//hide status bar iOS only !!!
-			Titanium.UI.iPhone.hideStatusBar();
-			
-			Window = require('ui/tablet/ApplicationWindow').ApplicationWindow;
-			// Window = require('ui/common/LoginWindow').ApplicationWindow;
-		
-		} else{
-		
-		//it's another tablet
-		Window = require('ui/tablet/ApplicationWindow').ApplicationWindow;
+    //determine platform and form factor and render approproate components
+    var osname = Ti.Platform.osname,
+        version = Ti.Platform.version,
+        height = Ti.Platform.displayCaps.platformHeight,
+        width = Ti.Platform.displayCaps.platformWidth;
+    
+    //considering tablet to have one dimension over 900px - this is imperfect, so you should feel free to decide
+    //yourself what you consider a tablet form factor for android
+    var isTablet = osname === 'ipad' || (osname === 'android' && (width > 899 || height > 899));
+    
+    var Window;
+    if (isTablet) {
+        if (osname === 'ipad') {
+        
+            //hide status bar iOS only !!!
+            Titanium.UI.iPhone.hideStatusBar();
+            
+            Window = require('ui/tablet/ApplicationWindow').ApplicationWindow;
+        
+        } else{
+        
+        //it's another tablet
+        Window = require('ui/tablet/ApplicationWindow').ApplicationWindow;
 
-		}
-	}
-	else {
-		// iPhone and Mobile Web make use of the platform-specific navigation controller,
-		// all other platforms follow a similar UI pattern
-		if (osname === 'iphone') {
-			Window = require('ui/handheld/ios/ApplicationWindow');
-		}
-		else if (osname === 'mobileweb') {
-			Window = require('ui/handheld/mobileweb/ApplicationWindow');
-		}
-		else {
-			Window = require('ui/handheld/android/ApplicationWindow');
-		}
-	}
-	new Window().open();
-	
+        }
+    }
+    else {
+        // iPhone and Mobile Web make use of the platform-specific navigation controller,
+        // all other platforms follow a similar UI pattern
+        if (osname === 'iphone') {
+            Window = require('ui/handheld/ios/ApplicationWindow');
+        }
+        else if (osname === 'mobileweb') {
+            Window = require('ui/handheld/mobileweb/ApplicationWindow');
+        }
+        else {
+            Window = require('ui/handheld/android/ApplicationWindow');
+        }
+    }
+    new Window().open();
+    
+    // Notification System - Listen for Global Events
+    Ti.App.addEventListener('restart', function(obj) {
+        alert('restart app');
+        ApplikationWin = new Window().open();
+    });
+    
 })();
