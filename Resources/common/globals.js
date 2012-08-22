@@ -25,12 +25,47 @@ var GV  =
             }
         }
     },
+    getTmpPin : function(argument) {
+        
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        //retrieve data
+        var rows = db.execute('SELECT * FROM appinfo WHERE id IS ?', 1);
+        
+        var appData = {};
+        
+        while (rows.isValidRow()){
+            var id = rows.fieldByName('id');
+            Ti.API.log('db pin: '+rows.fieldByName('tmpPin'));
+            appData = {
+                //custom : this.decrypt(rows.fieldByName('custom')),
+                tmpPin : this.decrypt(rows.fieldByName('tmpPin')),
+                version : rows.fieldByName('version')
+            };
+            rows.next();
+        }
+        rows.close();
+        db.close();
+        
+        return appData.tmpPin;
+    },
+    setTmpPin : function(value) {
+        
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        db.execute("UPDATE OR REPLACE appinfo SET tmpPin = '"+this.encrypt(value)+"' WHERE id IS " + 1);
+        
+        db.close();
+        
+    },
     saveQueryData : function(type, value) {
         
         //open database
         var db = Ti.Database.open('PolarionApp');
         
-        alert('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
+        Ti.API.log('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
         
         if (type === 'Name') {
             

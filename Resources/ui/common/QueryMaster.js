@@ -2,7 +2,7 @@
 var self;
 var VARS;
 var table;
-var tableRowValues = [];
+var tableRows = [];
 var scrollStartCallback;
 var scrollEndCallback;
 //var to check if listener are set
@@ -54,18 +54,7 @@ function openPopover(e){
     
     var queryData = {};
     
-    if (title === 'Name') {
-        
-        queryData.textfield = Ti.UI.createTextField({
-            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            color: '#336699',
-            hintText: title,
-            width: 250, height: 'auto',
-            // value: serverURL,
-            autocorrect: false 
-        });
-        popview.add(queryData.textfield);
-    } else if (title === 'Title') {
+    if (title === 'Title') {
         
         queryData.textfield = Ti.UI.createTextField({
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
@@ -165,13 +154,13 @@ function openPopover(e){
         popover.hide();
         Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
         Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
-        // Ti.App.fireEvent('restart');
     });
     
     
     popview.add(btn);
     
     popover.add(popview);
+   
     popover.show({view:table,animation:false});
 }
 
@@ -259,10 +248,52 @@ exports.showView = function(){
         font: { fontWeight:'bold',fontSize:24 },
         text: checkLable('Name')
     });
+    
+    var queryData = {};
+    
     lbl.callback = function(){
-        //open modal window
-        Ti.App.fireEvent('notification',{ name:'openModalWindow', body:{'modalType':'query', 'modalTitle':'Name', 'params':'' } });
+        
+        var popover = Ti.UI.iPad.createPopover({height:350,width:400});
+
+        var popview = Ti.UI.createView({
+            backgroundColor: 'white',
+            layout: 'vertical',
+            visible: true,
+            height:'auto',
+            width:'auto'
+        });
+        
+        queryData.textfield = Ti.UI.createTextField({
+            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+            color: '#336699',
+            hintText: 'Name',
+            width: 250, height: 'auto',
+            // value: serverURL,
+            autocorrect: false 
+        });
+        popview.add(queryData.textfield);
+        
+        var btn = Ti.UI.createButton({
+            title:'Submit'
+        });
+        // btn.callback = function(){
+            // alert("submit in popover");
+        // };
+        btn.addEventListener('click',function(){
+            VARS.GV.saveQueryData('Name', queryData.textfield.getValue());
+            popover.hide();
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
+        });
+        
+        
+        popview.add(btn);
+        
+        popover.add(popview);
+        popover.show({view:lbl,animation:false});
+        
     };
+    
     self.add(lbl);
     
     //create the table
@@ -448,7 +479,7 @@ exports.showView = function(){
         //rowTitle.callback = Data[i].callback;
         //row.callback = Data[i].callback;
 
-        tableRowValues.push(rowValue);
+        tableRows.push(row);
         customTableData.push(row);
     }
     table.setData(customTableData);

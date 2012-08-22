@@ -205,7 +205,8 @@ exports.showView = function(){
         title:'Submit'
     });
     
-    Loginbutton.addEventListener('click',loginButtonFkt);
+    // Loginbutton.addEventListener('click',loginButtonFkt);
+    Loginbutton.callback = loginButtonFkt;
     hasListener = true;
     self.add(Loginbutton);
     

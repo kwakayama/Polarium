@@ -40,12 +40,30 @@ exports.showView = function(){
         width:'auto',
         color:'#000'
     });
-
-    lbl.callback = function(){
-        alert("es geht doch");
+    
+    var tmpPwd = Ti.UI.createTextField({
+        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+        color: '#336699',
+        hintText: 'enter your new Pin',
+        passwordMask: 'true',
+        width: 250, 
+        height: 'auto',
+        // value: 'asdf',
+        autocorrect: false
+    });
+    
+    var  pwdSubmitBtn = Ti.UI.createButton({
+        title:'set temp Password'
+    });
+    
+    pwdSubmitBtn.callback = function(argument) {
+        newTmpPwd = tmpPwd.getValue();
+        VARS.GV.setTmpPin(newTmpPwd);  
     };
 
     self.add(lbl);
+    self.add(tmpPwd);
+    self.add(pwdSubmitBtn);
     
     // Show Stuff
     self.show();
