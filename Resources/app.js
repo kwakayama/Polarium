@@ -29,7 +29,7 @@ if (Ti.version < 1.8 ) {
     db.file.setRemoteBackup(false);
     
     //table to store application informations
-    db.execute('CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, version TEXT, tmpPin TEXT);');
+    db.execute("CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, version TEXT, tmpPin TEXT default '"+VARS.GV.encrypt('')+"');");
 
     //table to store user credentials
     db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
@@ -94,7 +94,7 @@ if (Ti.version < 1.8 ) {
     });
     
     Titanium.App.addEventListener('resume',function(){
-        alert('open :D');
+
         // create root window
         var w = Ti.UI.createWindow({
             backgroundColor:'#ffffff',

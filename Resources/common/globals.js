@@ -55,7 +55,7 @@ var GV  =
         //open database
         var db = Ti.Database.open('PolarionApp');
         
-        db.execute("UPDATE OR REPLACE appinfo SET tmpPin = '"+this.encrypt(value)+"' WHERE id IS " + 1);
+        db.execute("INSERT OR REPLACE INTO appinfo (tmpPin) VALUES ('"+this.encrypt(value)+"')");
         
         db.close();
         
