@@ -17,12 +17,6 @@ exports.createView = function() {
         layout: 'vertical',
         visible: false
     });
-        
-    self.callback = function(){
-        alert("callback von detail view");
-        // fire global event
-        // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'filterMenu', 'params':'' } });
-    };
     
     // UI
     

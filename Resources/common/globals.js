@@ -234,6 +234,9 @@ var GV  =
             var ok = function(projects) {
                 Ti.API.log('start');
                 Ti.API.log(projects);
+                Ti.API.log("length of projects: "+projects.length);
+                
+                Ti.App.fireEvent('popoverProjects',{ projects:projects});
             };
             var error = function(argument){
                 Ti.API.log("error - couldn't get projects");
@@ -266,6 +269,10 @@ var GV  =
     },
     loginThen : function(then) {
         credentials = this.getCredentials();
+        
+        //set host
+        Polarium.connection.setHost(credentials.serverURL);
+        
         Polarium.sessionService.login(
             credentials.username,
             credentials.pwd,
@@ -299,9 +306,8 @@ var GV  =
         var encPwd = this.encrypt(login.pwd);
         var encServerUrl = this.encrypt(login.serverURL);
         Ti.API.log(encUsername + ' - ' + this.decrypt(encUsername));
-//     
+     
         db.execute("INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,'"+encUsername+"','"+encPwd+"','"+encServerUrl+"')");
-        // Ti.API.log('sqlite: '+'INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,'+login.username+','+login.pwd+','+login.serverURL+')');
         db.close();
     },
     // function to retrieve values form the database

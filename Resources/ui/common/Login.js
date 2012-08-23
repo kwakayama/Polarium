@@ -10,6 +10,72 @@ var Server_Field,
     Username_Field,
     Pwd_Field;
 
+//eventlistener for project popover
+Titanium.App.addEventListener('popoverProjects',function(obj){
+    
+    var myprojects = obj.projects;
+    var projectList = [];
+    
+    var key; 
+    for (key in myprojects) {
+       var obj = myprojects[key];
+       // alert(obj.id);
+       projectList.push(obj.id);
+    }
+    //open popover to choose project
+    var popover = Ti.UI.iPad.createPopover({height:350,width:400});
+
+    var popview = Ti.UI.createView({
+        backgroundColor: 'white',
+        layout: 'vertical',
+        visible: true,
+        height:'auto',
+        width:'auto'
+    });
+    
+        var column1 = Ti.UI.createPickerColumn();
+        var i;
+        for(i=0, ilen=projectList.length; i<ilen; i++){
+          var row = Ti.UI.createPickerRow();
+            
+          var label = Ti.UI.createLabel({
+            font:{fontSize:20,fontWeight:'bold'},
+            text: projectList[i],
+            textAlign:'left',
+            height:'auto',
+            width:'auto'
+          });
+          
+          row.add(label);
+          column1.addRow(row);
+        }
+    
+        var picker = Ti.UI.createPicker({
+          columns: [column1],
+          visibleItems: 3,
+          selectionIndicator: true
+        });
+    
+    var btn = Ti.UI.createButton({
+        title:'Submit'
+    });
+    // btn.callback = function(){
+        // alert("submit in popover");
+    // };
+    btn.addEventListener('click',function(){
+        //TODO SAVE PROJECT
+        popover.hide();
+        Ti.App.fireEvent('restart');
+    });
+    
+    // popview.add(lbl);
+    popview.add(picker);
+    popview.add(btn);
+    
+    popover.add(popview);
+    popover.show({view:Loginbutton,animation:false});
+});
+
 // Template Constructor
 exports.createView = function() {
 
@@ -45,60 +111,7 @@ var loginButtonFkt = function(){
         VARS.GV.login(function(sessionid) {
             if (sessionid !== null) {
                                    
-                //open modal window to choose project
-                var popover = Ti.UI.iPad.createPopover({height:350,width:400});
-            
-                var popview = Ti.UI.createView({
-                    backgroundColor: 'white',
-                    layout: 'vertical',
-                    visible: true,
-                    height:'auto',
-                    width:'auto'
-                });
-                            
-                var projects = [ 'Bananas', 'Strawberries', 'Mangos', 'Grapes' ];
-                
-                    var column1 = Ti.UI.createPickerColumn();
-                    var i;
-                    for(i=0, ilen=projects.length; i<ilen; i++){
-                      var row = Ti.UI.createPickerRow();
-                        
-                      var label = Ti.UI.createLabel({
-                        font:{fontSize:20,fontWeight:'bold'},
-                        text: projects[i],
-                        textAlign:'left',
-                        height:'auto',
-                        width:'auto'
-                      });
-                      
-                      row.add(label);
-                      column1.addRow(row);
-                    }
-                
-                    var picker = Ti.UI.createPicker({
-                      columns: [column1],
-                      visibleItems: 3,
-                      selectionIndicator: true
-                    });
-                
-                var btn = Ti.UI.createButton({
-                    title:'Submit'
-                });
-                // btn.callback = function(){
-                    // alert("submit in popover");
-                // };
-                btn.addEventListener('click',function(){
-                    //TODO SAVE PROJECT
-                    popover.hide();
-                    Ti.App.fireEvent('restart');
-                });
-                
-                // popview.add(lbl);
-                popview.add(picker);
-                popview.add(btn);
-                
-                popover.add(popview);
-                popover.show({view:Loginbutton,animation:false});
+                VARS.GV.getprojects();
                 
             }else {
                 alert('sorry, can not log in');
@@ -115,9 +128,10 @@ var loginButtonFkt = function(){
 };
 //function to validate a URL
 function validateURL(textval) {
-      var urlregex = new RegExp(
-            "^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
-      return urlregex.test(textval);
+      // var urlregex = new RegExp(
+            // "^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
+      // return urlregex.test(textval);
+      return true;
 }
 
 //function to valitate a Username
