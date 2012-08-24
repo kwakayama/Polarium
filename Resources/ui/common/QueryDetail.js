@@ -1,6 +1,8 @@
 //Private Vars
 var self;
 var VARS;
+var lbl;
+var table;
 var hasQueryData = false;
 //type of window
 exports.type = "detail";
@@ -24,6 +26,74 @@ function trimTitle (string) {
     return trimmedString;
 }
 
+//eventlistener for project popover
+Titanium.App.addEventListener('createQueryDetailTable',function(arg){
+    var workitems = arg.workitems;
+    
+    lbl.text = 'Query Results: ('+workitems.length+')';
+        
+    var customTableData = [];
+    var key;
+    for (key in workitems) {
+        var obj = workitems[key];
+        Ti.API.log('title: '+obj.title);
+        Ti.API.log('status: '+obj.status);
+        Ti.API.log('created: '+obj.created);
+        
+        var row = Titanium.UI.createTableViewRow({
+            height:50
+        });
+        var rowID = Titanium.UI.createLabel({
+            text: obj.id,
+            font:{fontSize:12,fontWeight:'bold'},
+            height:'auto',
+            width:'auto',
+            textAlign:'left',
+            top:27,
+            left:5,
+            height:'auto'
+        });
+        var rowTitle = Titanium.UI.createLabel({
+            text: trimTitle(obj.title),
+            font:{fontSize:16,fontWeight:'bold'},
+            height:'auto',
+            width:'auto',
+            textAlign:'left',
+            top:5,
+            left:5,
+            wordWrap:true,
+            height:'auto'
+        });
+        var rowStatus = Titanium.UI.createLabel({
+            text: obj.status,
+            font:{fontSize:12,fontWeight:'bold'},
+            height:'auto',
+            width:'auto',
+            textAlign:'left',
+            top:27,
+            left:100,
+            height:'auto'
+        });
+        var rowCreated = Titanium.UI.createLabel({
+            text: obj.created,
+            font:{fontSize:12,fontWeight:'bold'},
+            height:'auto',
+            width:'auto',
+            textAlign:'left',
+            top:27,
+            left:200,
+            height:'auto'
+        });
+        row.add(rowTitle);
+        row.add(rowID);
+        row.add(rowCreated);
+        row.add(rowStatus);
+        customTableData.push(row);
+        table.setData(customTableData);
+    }
+});
+
+
 // Template Constructor
 exports.createView = function() {
 
@@ -38,106 +108,34 @@ exports.createView = function() {
 		visible: false
 	});				
 	
-	// UI
-	
 	return self;
 };
 
 
 // Show View
 exports.showView = function(arguments){
-	if (arguments !== null) {
-	    //call from button or pulldown
-	    hasQueryData = true;
-	    Ti.API.log(JSON.stringify(arguments));
-	}else{
-	    //normal show - do a request with currentworkitemid
-	    var workitemCallback = function(arg){
-            Ti.API.log('mycallback says: '+arg);
-            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':arg } });
-        };
-        VARS.GV.getWorkitems(workitemCallback);
-	}
-	var lbl = Ti.UI.createLabel({
-		top:10,
-		height:'auto',
-		font: { fontWeight:'bold',fontSize:24 },
-		text:'Query Results:'
-	});
-	self.add(lbl);
-	
-	table = Ti.UI.createTableView({
-	    rowHeight:50
-		// data:tableData
-	});
-	
-    if (hasQueryData === true) {
-        lbl.text = 'Query Results: ('+arguments.length+')';
-        var customTableData = [];
-        var key;
-        for (key in arguments) {
-            var obj = arguments[key];
-            // Ti.API.log('title: '+obj.title);
-            // Ti.API.log('status: '+obj.status);
-            // Ti.API.log('created: '+obj.created);
-            
-            var row = Titanium.UI.createTableViewRow({
-                height:50
-            });
-            var rowID = Titanium.UI.createLabel({
-                text: obj.id,
-                font:{fontSize:12,fontWeight:'bold'},
-                height:'auto',
-                width:'auto',
-                textAlign:'left',
-                top:27,
-                left:5,
-                height:'auto'
-            });
-            var rowTitle = Titanium.UI.createLabel({
-                text: trimTitle(obj.title),
-                font:{fontSize:16,fontWeight:'bold'},
-                height:'auto',
-                width:'auto',
-                textAlign:'left',
-                top:5,
-                left:5,
-                wordWrap:true,
-                height:'auto'
-            });
-            var rowStatus = Titanium.UI.createLabel({
-                text: obj.status,
-                font:{fontSize:12,fontWeight:'bold'},
-                height:'auto',
-                width:'auto',
-                textAlign:'left',
-                top:27,
-                left:100,
-                height:'auto'
-            });
-            var rowCreated = Titanium.UI.createLabel({
-                text: obj.created,
-                font:{fontSize:12,fontWeight:'bold'},
-                height:'auto',
-                width:'auto',
-                textAlign:'left',
-                top:27,
-                left:200,
-                height:'auto'
-            });
-            row.add(rowTitle);
-            row.add(rowID);
-            row.add(rowCreated);
-            row.add(rowStatus);
-            customTableData.push(row);
-            table.setData(customTableData);
-        }
-    } else{
-        Ti.API.log('no table data :(');    
-    }
+    
+    // UI
+    lbl = Ti.UI.createLabel({
+        top:10,
+        height:'auto',
+        font: { fontWeight:'bold',fontSize:24 },
+        text:'Query Results:'
+    });
+    self.add(lbl);
+    
+    table = Ti.UI.createTableView({
+        rowHeight:50
+        // data:tableData
+    });
 
-	// Show Stuff
-	self.add(table);
+
+    // Show Stuff
+    self.add(table);
+	
+	//it's callback fills the table via the createQueryDetailTable listener
+    VARS.GV.getWorkitems();
+	
 	self.show();
 };
 

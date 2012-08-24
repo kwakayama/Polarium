@@ -200,7 +200,7 @@ var GV  =
         }
     },
     //Funktion make a request with the currentWorkitemID
-    getWorkitems : function(mycall) {        
+    getWorkitems : function() {        
         this.loginThen(function() {
             
             //get current query out of the database
@@ -208,7 +208,7 @@ var GV  =
             
             var ok = function(workitems) {
                 Ti.API.log('we got ' + workitems.length + ' workitems :)');
-                mycall(workitems);
+                Ti.App.fireEvent('createQueryDetailTable',{ workitems:workitems});
             };
             var error = function(argument) {
                 Ti.API.log("error - couldn't get workitems :()");

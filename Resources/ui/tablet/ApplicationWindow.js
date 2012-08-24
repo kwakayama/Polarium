@@ -77,16 +77,27 @@ exports.ApplicationWindow = function() {
             var refreshButton = Ti.UI.createButton({
                 systemButton:Titanium.UI.iPhone.SystemButton.REFRESH
             });
+            refreshButton.addEventListener('click',function(){
+                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
+            });
+            
             var logBtn = Ti.UI.createButton({title:'Logout'});
-            logBtn.callback = function(){
+            logBtn.addEventListener('click',function(){
                 //Navigate  to Login View
                 Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
                 
                 //fire polarium logout request
-                VARS.GV.logout();
-            };
-            logBtn.hide();
-            self.add(logBtn);
+                VARS.GV.logout(); 
+            });
+            // logBtn.callback = function(){
+                // //Navigate  to Login View
+                // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+//                 
+                // //fire polarium logout request
+                // VARS.GV.logout();
+            // };
+            // logBtn.hide();
+            // self.add(logBtn);
             
             
             var newButton = Ti.UI.createButton({title:'New'});
@@ -114,17 +125,23 @@ exports.ApplicationWindow = function() {
         } else if(type === 'logout'){
             
             var logBtn = Ti.UI.createButton({title:'Logout'});
-            
-            logBtn.callback = function(){
+            logBtn.addEventListener('click',function(){
                 //Navigate  to Login View
                 Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
                 
                 //fire polarium logout request
-                VARS.GV.logout();
-            };
-            
-            logBtn.hide();
-            self.add(logBtn);
+                VARS.GV.logout(); 
+            });
+            // logBtn.callback = function(){
+                // //Navigate  to Login View
+                // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+//                 
+                // //fire polarium logout request
+                // VARS.GV.logout();
+            // };
+//             
+            // logBtn.hide();
+            // self.add(logBtn);
             
             self.setToolbar([flexSpace,flexSpace,flexSpace,flexSpace,flexSpace,flexSpace,logBtn]);
         } else{
