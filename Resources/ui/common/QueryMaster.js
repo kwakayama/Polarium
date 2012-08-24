@@ -5,6 +5,7 @@ var table;
 var tableRows = [];
 var scrollStartCallback;
 var scrollEndCallback;
+var currentQueryData = {};
 //var to check if listener are set
 var setListener;
 
@@ -13,9 +14,9 @@ exports.type = "master";
 
 //check if data for query exists in database
 function checkLable(title){
-    
-    var result = VARS.GV.getCurrentQuery();
-    Ti.API.log('---check label---'+result);
+    result = currentQueryData;
+    // var result = VARS.GV.getCurrentQuery();
+    // Ti.API.log('---check label---'+result);
     if (title === 'Name'){
         return (result.name !== '' && result.name !== null && typeof result.name !== 'undefined') ? result.name : 'new Query';
     } else if (title === 'Title'){
@@ -164,6 +165,12 @@ function openPopover(e){
     popover.show({view:table,animation:false});
 }
 
+//checklable helper function
+function getCurrentQueryData(){
+    currentQueryData = VARS.GV.getCurrentQuery();
+    Ti.API.log('---check label---'+currentQueryData);
+}
+
 //some dummy data for our table view
 var Data = [
     {title:'Title', getLable:checkLable, hasChild:true, callback:function function_name () {
@@ -242,6 +249,9 @@ exports.createView = function() {
 
 // Show View
 exports.showView = function(){
+    
+    //set CurrentQueryData
+    getCurrentQueryData();
     
     var lbl = Ti.UI.createLabel({
         top:10,

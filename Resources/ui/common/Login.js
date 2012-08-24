@@ -33,37 +33,38 @@ Titanium.App.addEventListener('popoverProjects',function(obj){
         width:'auto'
     });
     
-        var column1 = Ti.UI.createPickerColumn();
-        var i;
-        for(i=0, ilen=projectList.length; i<ilen; i++){
-          var row = Ti.UI.createPickerRow();
-            
-          var label = Ti.UI.createLabel({
-            font:{fontSize:20,fontWeight:'bold'},
-            text: projectList[i],
-            textAlign:'left',
-            height:'auto',
-            width:'auto'
-          });
-          
-          row.add(label);
-          column1.addRow(row);
-        }
+    var column1 = Ti.UI.createPickerColumn();
+    var i;
+    for(i=0, ilen=projectList.length; i<ilen; i++){
+      var row = Ti.UI.createPickerRow();
+        
+      var label = Ti.UI.createLabel({
+        font:{fontSize:20,fontWeight:'bold'},
+        text: projectList[i],
+        textAlign:'left',
+        height:'auto',
+        width:'auto'
+      });
+      
+      row.add(label);
+      column1.addRow(row);
+    }
+
+    var picker = Ti.UI.createPicker({
+      columns: [column1],
+      visibleItems: 3,
+      selectionIndicator: true
+    });
     
-        var picker = Ti.UI.createPicker({
-          columns: [column1],
-          visibleItems: 3,
-          selectionIndicator: true
-        });
+    picker.setSelectedRow(0,0,true);
     
     var btn = Ti.UI.createButton({
         title:'Submit'
     });
-    // btn.callback = function(){
-        // alert("submit in popover");
-    // };
+
     btn.addEventListener('click',function(){
-        //TODO SAVE PROJECT
+        VARS.GVUpdate('currentProjectId',picker.getSelectedRow(0).children[0].text);
+        
         popover.hide();
         Ti.App.fireEvent('restart');
     });
