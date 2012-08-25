@@ -4,6 +4,15 @@ var VARS;
 //type of window
 exports.type = "detail";
 
+//Function For switch Event
+function switchFkt(e){
+    if (e.value === true) {
+        VARS.GV.setIsSetPin('armed');
+    } else{
+        VARS.GV.setIsSetPin('defused');   
+    }
+}
+
 // Template Constructor
 exports.createView = function() {
 
@@ -50,6 +59,11 @@ exports.showView = function(){
         title:'set temp Password'
     });
     
+    var PinIsActive = VARS.GV.getIsSetPin();
+    var tmpPwdSwitch = Titanium.UI.createSwitch({
+        value:PinIsActive
+    });
+    tmpPwdSwitch.addEventListener('change',switchFkt);
     pwdSubmitBtn.callback = function(argument) {
         newTmpPwd = tmpPwd.getValue();
         VARS.GV.setTmpPin(newTmpPwd);  
@@ -58,6 +72,7 @@ exports.showView = function(){
     self.add(lbl);
     self.add(tmpPwd);
     self.add(pwdSubmitBtn);
+    self.add(tmpPwdSwitch);
     
     // Show Stuff
     self.show();

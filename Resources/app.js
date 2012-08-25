@@ -29,8 +29,15 @@ if (Ti.version < 1.8 ) {
     db.file.setRemoteBackup(false);
     
     //table to store application informations
-    db.execute("CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, version TEXT, tmpPin TEXT default '"+VARS.GV.encrypt('')+"');");
-
+    db.execute("CREATE TABLE IF NOT EXISTS appinfo(id INTEGER PRIMARY KEY, version TEXT, tmpPin TEXT default '"+VARS.GV.encrypt('')+"', tmpPinIsSet TEXT DEFAULT '"+VARS.GV.encrypt('defused')+"');");
+    //get count of appinfo
+    var rows = db.execute('SELECT COUNT(*) FROM appinfo');
+    var count = rows.field(0);
+    //initialize the first querie if it doesn't exist
+    if (count === 0) {
+        db.execute('INSERT INTO appinfo DEFAULT VALUES');
+    }
+    
     //table to store user credentials
     db.execute('CREATE TABLE IF NOT EXISTS credentials(id INTEGER PRIMARY KEY, username TEXT, pwd TEXT, serverURL TEXT);');
 
@@ -94,74 +101,83 @@ if (Ti.version < 1.8 ) {
     });
     
     Titanium.App.addEventListener('resume',function(){
-
-        // create root window
-        var w = Ti.UI.createWindow({
-            backgroundColor:'#ffffff',
-            title:'Pin',
-            barColor:'#336699',
-            tabBarHidden:true
-        });
+        Ti.API.log("getissetpin: "+VARS.GV.getIsSetPin());
         
-        var v = Ti.UI.createView({
-            backgroundColor: 'transparent',
-            layout: 'vertical'
-        });
-        
-        var lbl = Ti.UI.createLabel({
-            top:20,
-            font: { fontWeight:'bold',fontSize:48 },
-            text:'Pin',
-            height:'auto',
-            width:'auto',
-            color:'#000'
-        });
-        var tmpPwd = Ti.UI.createTextField({
-            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            color: '#336699',
-            hintText: 'enter your Pin',
-            passwordMask: 'true',
-            width: 250, 
-            height: 'auto',
-            // value: 'asdf',
-            autocorrect: false
-        });
-        var SubmitButton = Titanium.UI.createButton({ 
-            backgroundColor: 'blue',
-            borderColor: '#1c1d1c',
-            borderRadius: 6,
-            color: '#ffffff',
-            borderWidth: '2',
-            height: 50,
-            font:{size:9, fontWeight:'bold'},
-            width: 250,
-            backgroundImage: 'none',
-            title:'Submit'
-        });
-        SubmitButton.addEventListener('click',function(){
-            if (checkPin(tmpPwd.getValue())) {
-                w.close();    
-            } else{
-                alert('Sorry your Pin is not correct :(');
+        //check if pin is set to armed
+        if (VARS.GV.getIsSetPin() === false) {
+            
+            Ti.API.log('welcome back - pin is set false');
+            
+        } else{
+            
+            // create root window
+            var w = Ti.UI.createWindow({
+                backgroundColor:'#ffffff',
+                title:'Pin',
+                barColor:'#336699',
+                tabBarHidden:true
+            });
+            
+            var v = Ti.UI.createView({
+                backgroundColor: 'transparent',
+                layout: 'vertical'
+            });
+            
+            var lbl = Ti.UI.createLabel({
+                top:20,
+                font: { fontWeight:'bold',fontSize:48 },
+                text:'Pin',
+                height:'auto',
+                width:'auto',
+                color:'#000'
+            });
+            var tmpPwd = Ti.UI.createTextField({
+                borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                color: '#336699',
+                hintText: 'enter your Pin',
+                passwordMask: 'true',
+                width: 250, 
+                height: 'auto',
+                // value: 'asdf',
+                autocorrect: false
+            });
+            var SubmitButton = Titanium.UI.createButton({ 
+                backgroundColor: 'blue',
+                borderColor: '#1c1d1c',
+                borderRadius: 6,
+                color: '#ffffff',
+                borderWidth: '2',
+                height: 50,
+                font:{size:9, fontWeight:'bold'},
+                width: 250,
+                backgroundImage: 'none',
+                title:'Submit'
+            });
+            SubmitButton.addEventListener('click',function(){
+                if (checkPin(tmpPwd.getValue())) {
+                    w.close();    
+                } else{
+                    alert('Sorry your Pin is not correct :(');
+                }
+            });
+            function checkPin(tmpPwd){
+                Ti.API.log('tmpPwd: '+tmpPwd);
+                pin = VARS.GV.getTmpPin();
+                
+                Ti.API.log("hello pin: "+pin);
+                
+                if (pin === tmpPwd) {
+                    return true;    
+                }else{
+                    return false;
+                }  
             }
-        });
-        function checkPin(tmpPwd){
-            Ti.API.log('tmpPwd: '+tmpPwd);
-            pin = VARS.GV.getTmpPin();
             
-            Ti.API.log("hello pin: "+pin);
-            
-            if (pin === tmpPwd) {
-                return true;    
-            }else{
-                return false;
-            }  
+            v.add(lbl);
+            v.add(tmpPwd);
+            v.add(SubmitButton);
+            w.add(v);
+            w.open();
         }
-        
-        v.add(lbl);
-        v.add(tmpPwd);
-        v.add(SubmitButton);
-        w.add(v);
-        w.open();
     });
 })();

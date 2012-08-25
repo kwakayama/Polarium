@@ -292,7 +292,6 @@ exports.ApplicationWindow = function() {
                 if (notificationData.view === 'master') {
 
                     //set logout button
-                    //setLogoutButton(true);
                     setBackButton(false);
                     showToolbar('logout');
 
@@ -308,7 +307,6 @@ exports.ApplicationWindow = function() {
 
                     //set back and logout buttons
                     setBackButton(true);
-                    // setLogoutButton(true);
                     showToolbar('query');
 
                     //hide views
@@ -326,7 +324,6 @@ exports.ApplicationWindow = function() {
                     VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
                     
                     //set logout button
-                    // setLogoutButton(true);
                     showToolbar('logout');
 
                     //hide views
@@ -344,7 +341,6 @@ exports.ApplicationWindow = function() {
                 } else if(notificationData.view === 'settings') {
                     
                     //set logout and back button
-                    // setLogoutButton(true);
                     showToolbar('logout');
                     setBackButton(true);
 
@@ -364,7 +360,6 @@ exports.ApplicationWindow = function() {
                 }else if(notificationData.view === 'about') {
                 
                     //set logout and back button
-                    // setLogoutButton(true);
                     showToolbar('logout');
                     setBackButton(true);
 
@@ -389,7 +384,6 @@ exports.ApplicationWindow = function() {
                         arguments = null;
                     }
                     //set logout button
-                    // setLogoutButton(true);
                     showToolbar('query');
 
                     //hide views
@@ -412,7 +406,6 @@ exports.ApplicationWindow = function() {
                 if (notificationData.view === 'login') {
                     
                     //hide logout button
-                    // setLogoutButton(false);
                     showToolbar();
 
                     //hide views
@@ -613,34 +606,6 @@ exports.ApplicationWindow = function() {
             }
         }*/
     });
-
-    var setLogoutButton = function(visible) {
-                
-        if (visible === true) {
-            //create logout button
-            var logoutButton = Ti.UI.createButton({title:'Logout'});
-            
-            // workaround for callback of navButton 
-            self.add(logoutButton);
-            self.setRightNavButton(logoutButton);
-            logoutButton.hide();
-
-            logoutButton.callback = function(){
-            
-                //Navigate  to Login View
-                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
-                
-                //fire polarium logout request
-                VARS.GV.logout();
-            
-            };
-
-        } else{
-            if (logoutButton !== 'undefined') {
-                self.setRightNavButton(null);
-            }
-        }
-    };
     
     var setBackButton = function(visible) {
         
@@ -695,14 +660,5 @@ exports.ApplicationWindow = function() {
     //the "real" start
     createViews();
     
-    //
-    // orientation change listener
-    //
-    Ti.Gesture.addEventListener('orientationchange',function(e)
-    {
-        // Ti.API.log('not implemented yet '+VARS.GV.currentStage);
-        // Ti.App.restart();
-    });
-
     return self;
 };
