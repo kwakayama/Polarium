@@ -93,7 +93,84 @@ if (Ti.version < 1.8 ) {
             Window = require('ui/handheld/android/ApplicationWindow');
         }
     }
-    new Window().open();
+    
+    //check if pin is set to armed
+    if (VARS.GV.getIsSetPin() === false) {
+        
+        new Window().open();
+        
+    } else{
+        
+        // create root window
+        var w = Ti.UI.createWindow({
+            backgroundColor:'#ffffff',
+            title:'Pin',
+            barColor:'#336699',
+            tabBarHidden:true
+        });
+        
+        var v = Ti.UI.createView({
+            backgroundColor: 'transparent',
+            layout: 'vertical'
+        });
+        
+        var lbl = Ti.UI.createLabel({
+            top:20,
+            font: { fontWeight:'bold',fontSize:48 },
+            text:'Pin',
+            height:'auto',
+            width:'auto',
+            color:'#000'
+        });
+        var tmpPwd = Ti.UI.createTextField({
+            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+            color: '#336699',
+            hintText: 'enter your Pin',
+            passwordMask: 'true',
+            width: 250, 
+            height: 'auto',
+            // value: 'asdf',
+            autocorrect: false
+        });
+        var SubmitButton = Titanium.UI.createButton({ 
+            backgroundColor: 'blue',
+            borderColor: '#1c1d1c',
+            borderRadius: 6,
+            color: '#ffffff',
+            borderWidth: '2',
+            height: 50,
+            font:{size:9, fontWeight:'bold'},
+            width: 250,
+            backgroundImage: 'none',
+            title:'Submit'
+        });
+        SubmitButton.addEventListener('click',function(){
+            if (checkPin(tmpPwd.getValue())) {
+                w.close();
+                new Window().open();    
+            } else{
+                alert('Sorry your Pin is not correct :(');
+            }
+        });
+        function checkPin(tmpPwd){
+            Ti.API.log('tmpPwd: '+tmpPwd);
+            pin = VARS.GV.getTmpPin();
+            
+            Ti.API.log("hello pin: "+pin);
+            
+            if (pin === tmpPwd) {
+                return true;    
+            }else{
+                return false;
+            }  
+        }
+        
+        v.add(lbl);
+        v.add(tmpPwd);
+        v.add(SubmitButton);
+        w.add(v);
+        w.open();
+    }
     
     // Notification System - Listen for Global Events
     Ti.App.addEventListener('restart', function(obj) {
