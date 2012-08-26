@@ -352,7 +352,7 @@ var GV  =
     encrypt : function(str){
     
     //encrypt string with passphrase
-    var encrypted = CryptoJS.AES.encrypt(str, "Passphrase");
+    var encrypted = CryptoJS.AES.encrypt(str, "Ich bin die Telekom - auf mich ist Verlass");
     return encrypted;
     
     },
@@ -361,7 +361,7 @@ var GV  =
         if(enc !== null){
            Ti.API.log("----start decrypting ----"+enc);
             //decrypt string with passphrase
-            var decrypted = CryptoJS.AES.decrypt(enc, "Passphrase");
+            var decrypted = CryptoJS.AES.decrypt(enc, "Ich bin die Telekom - auf mich ist Verlass");
             //set encoding
             result = decrypted.toString(CryptoJS.enc.Utf8);
             Ti.API.log("----done decrypting: "+result);
@@ -437,10 +437,10 @@ var getQueryStringById = function(id){
             custom : GV.decrypt(queryData.fieldByName('custom'))
         };
         
-        //query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom)+' AND '+queryHelper('assignee.id',result.assignables)+' AND '+queryHelper('author.id',result.author);
+        
         isFirstQueryItem = true;
         query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author);
-        isFirstQueryItem = false;
+        
         Ti.API.log('query: '+query);
             
     } else{

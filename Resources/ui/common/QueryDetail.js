@@ -1,17 +1,13 @@
 //Private Vars
-var self;
-var VARS;
-var lbl;
-var table;
-var hasQueryData = false;
+var self,
+    VARS,
+    lbl,
+    actInd,
+    table,
+    hasQueryData = false;
+    
 //type of window
 exports.type = "detail";
-
-//Data
-var Data = [
-	{workItemTitle:'item1',value:'test'},
-	{workItemTitle:'item2',value:'test2'}
-];
 
 function trimTitle (string) {
     var trimmedString
@@ -28,6 +24,10 @@ function trimTitle (string) {
 
 //eventlistener for project popover
 Titanium.App.addEventListener('createQueryDetailTable',function(arg){
+    
+    //hide loading animation
+    actInd.hide();
+    
     var workitems = arg.workitems;
     
     lbl.text = 'Query Results: ('+workitems.length+')';
@@ -122,7 +122,28 @@ exports.showView = function(arguments){
         font: { fontWeight:'bold',fontSize:24 },
         text:'Query Results:'
     });
+    
+    actInd = Titanium.UI.createActivityIndicator({
+        width:30,
+        height:30,
+        left:150,
+        top:-30
+    });
+    actInd.style = 2;
+    // actInd = Ti.UI.createActivityIndicator({
+      // color: 'green',
+      // font: {fontFamily:'Helvetica Neue', fontSize:26, fontWeight:'bold'},
+      // message: 'Loading...',
+      // style:Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
+      // top:10,
+      // left:10,
+      // height:'auto',
+      // width:'auto'
+    // });
+    
     self.add(lbl);
+    self.add(actInd);
+    actInd.show();
     
     table = Ti.UI.createTableView({
         rowHeight:50
