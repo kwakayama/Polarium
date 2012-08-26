@@ -202,7 +202,7 @@ exports.showView = function(){
       hintText: 'Password',
       passwordMask: 'true',
       width: 250, height: 'auto',
-      value: pwd,
+      value: '',
       autocorrect: false
     });
     self.add(Pwd_Field);
