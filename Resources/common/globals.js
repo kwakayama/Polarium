@@ -26,6 +26,30 @@ var GV  =
             }
         }
     },
+    //this function will erease all data which is stored in the database
+    wipeData : function(){
+        
+        //open database
+        var db = Ti.Database.open('PolarionApp');
+        
+        //Delete Data
+        db.execute('DELETE FROM queries');
+        db.execute('DELETE FROM appinfo');
+        db.execute('DELETE FROM credentials');
+        
+        //set to default
+        db.execute('INSERT INTO appinfo DEFAULT VALUES');
+        db.execute('INSERT INTO queries DEFAULT VALUES');
+        
+        db.close();
+        
+        //Navigate  to Login View
+        Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+        
+        //fire polarium logout request
+        GV.logout(); 
+        
+    },
     getTmpPin : function(argument) {
         
         //open database

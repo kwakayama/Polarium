@@ -63,16 +63,27 @@ exports.showView = function(){
     var tmpPwdSwitch = Titanium.UI.createSwitch({
         value:PinIsActive
     });
+    var wipeBtn = Ti.UI.createButton({
+        title:'wipe data'
+    });
+    
     tmpPwdSwitch.addEventListener('change',switchFkt);
+    
     pwdSubmitBtn.callback = function(argument) {
         newTmpPwd = tmpPwd.getValue();
         VARS.GV.setTmpPin(newTmpPwd);  
+    };
+    
+    wipeBtn.callback = function(){
+        alert('you wiped all data');
+        VARS.GV.wipeData();  
     };
 
     self.add(lbl);
     self.add(tmpPwd);
     self.add(pwdSubmitBtn);
     self.add(tmpPwdSwitch);
+    self.add(wipeBtn);
     
     // Show Stuff
     self.show();

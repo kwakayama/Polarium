@@ -404,10 +404,10 @@ exports.ApplicationWindow = function() {
             } else if (notificationData.type === 'full') {
                 VARS.GVUpdate('previousStage' , VARS.GV.currentStage);
                 if (notificationData.view === 'login') {
-                    
-                    //hide logout button
-                    showToolbar();
 
+                    //hide logout and back button
+                    showToolbar();
+                    setBackButton(false);                   
                     //hide views
                     hideAllViews('all');
                     delete Login;
@@ -418,6 +418,7 @@ exports.ApplicationWindow = function() {
                     // Show full View
                     fullwindowContainer.show();
                     Login.showView();
+                    
                 }
             }
         
