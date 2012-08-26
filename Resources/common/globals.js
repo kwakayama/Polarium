@@ -1,6 +1,8 @@
 var Polarium = require('/common/polarium_api').Polarium;
 var CryptoJS  = require('/common/aes').CryptoJS;
 
+var isFirstQueryItem = true;
+
 // Common Global Variables
 var GV  =
 {
@@ -435,8 +437,10 @@ var getQueryStringById = function(id){
             custom : GV.decrypt(queryData.fieldByName('custom'))
         };
         
-        query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom)+' AND '+queryHelper('assignee.id',result.assignables)+' AND '+queryHelper('author.id',result.author);
-        
+        //query = queryHelper('title',result.title)+' AND '+queryHelper('type',result.type)+' AND '+queryHelper('status',result.status)+' AND '+queryHelper('custom',result.custom)+' AND '+queryHelper('assignee.id',result.assignables)+' AND '+queryHelper('author.id',result.author);
+        isFirstQueryItem = true;
+        query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author);
+        isFirstQueryItem = false;
         Ti.API.log('query: '+query);
             
     } else{
@@ -447,20 +451,33 @@ var getQueryStringById = function(id){
 };
 
 function queryHelper(title, value){
-    var result;
+    
+    var result = '';
+    var and = '';
+    
+    if (isFirstQueryItem === true) {
+        isFirstQueryItem = false;
+    } else{
+        and = ' AND '; 
+    }
+    
     //expert mode ;)
     if (title === 'custom') {
         if (value === '' || value === null) {
-            result = 'NOT '+title+':######NULL';
+            //return nothing
+            //result += 'NOT '+title+':######NULL';
         } else{
-            result = value;
+            result += and;
+            result += value;
         }
     }else{
         //is the value empty or null then set value to search ALL
         if (value === '' || value === null) {
-            result = 'NOT '+title+':######NULL';
+            //return nothing
+            //result += 'NOT '+title+':######NULL';
         } else{
-            result = title+':'+value;
+            result += and;
+            result += title+':'+value;
         }    
     }
     
