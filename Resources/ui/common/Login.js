@@ -13,6 +13,11 @@ var Server_Field,
 //eventlistener for project popover
 Titanium.App.addEventListener('popoverProjects',function(obj){
     
+    //hide keyboard
+    Server_Field.blur();
+    Username_Field.blur();
+    Pwd_Field.blur();
+    
     var myprojects = obj.projects;
     var projectList = [];
     
@@ -23,10 +28,14 @@ Titanium.App.addEventListener('popoverProjects',function(obj){
        projectList.push(obj.id);
     }
     //open popover to choose project
-    var popover = Ti.UI.iPad.createPopover({height:350,width:400});
+    var popover = Ti.UI.iPad.createPopover({
+        height:250,
+        width:310,
+        title:'Choose Project'
+    });
 
     var popview = Ti.UI.createView({
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         layout: 'vertical',
         visible: true,
         height:'auto',
@@ -59,7 +68,9 @@ Titanium.App.addEventListener('popoverProjects',function(obj){
     picker.setSelectedRow(0,0,true);
     
     var btn = Ti.UI.createButton({
-        title:'Submit'
+        title:'Submit',
+        height:'auto',
+        width:320
     });
 
     btn.addEventListener('click',function(){

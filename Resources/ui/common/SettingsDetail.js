@@ -37,11 +37,10 @@ exports.createView = function() {
 exports.showView = function(){
     
     var lbl = Ti.UI.createLabel({
-        text:'Settings',
+        top:10,
         height:'auto',
-        height:'auto',
-        width:'auto',
-        color:'#000'
+        font: { fontWeight:'bold',fontSize:24 },
+        text:'Settings'
     });
     
     var tmpPwd = Ti.UI.createTextField({
@@ -51,12 +50,14 @@ exports.showView = function(){
         passwordMask: 'true',
         width: 250, 
         height: 'auto',
-        // value: 'asdf',
+        value: VARS.GV.getTmpPin(),
         autocorrect: false
     });
     
     var  pwdSubmitBtn = Ti.UI.createButton({
-        title:'set temp Password'
+        title:'set temp Password',
+        height: 'auto',
+        width: 250
     });
     
     var PinIsActive = VARS.GV.getIsSetPin();
@@ -64,7 +65,9 @@ exports.showView = function(){
         value:PinIsActive
     });
     var wipeBtn = Ti.UI.createButton({
-        title:'wipe data'
+        title:'wipe data',
+        height: 'auto',
+        width: 250
     });
     
     tmpPwdSwitch.addEventListener('change',switchFkt);

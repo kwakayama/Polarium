@@ -43,10 +43,15 @@ function checkLable(title){
 function openPopover(e){
     //open modal window to choose project
     var title = e.row.id;
-    var popover = Ti.UI.iPad.createPopover({height:350,width:400});
+
+    var popover = Ti.UI.iPad.createPopover({
+        height:65,
+        width:250,
+        title:title
+    }); 
 
     var popview = Ti.UI.createView({
-        backgroundColor: 'white',
+        backgroundColor: 'transparent',
         layout: 'vertical',
         visible: true,
         height:'auto',
@@ -145,7 +150,8 @@ function openPopover(e){
     }
     
     var btn = Ti.UI.createButton({
-        title:'Submit'
+        title:'Submit',
+        width: 250, height: 'auto'
     });
     // btn.callback = function(){
         // alert("submit in popover");
@@ -263,10 +269,14 @@ exports.showView = function(){
     
     lbl.callback = function(){
         
-        var popover = Ti.UI.iPad.createPopover({height:350,width:400});
+        var popover = Ti.UI.iPad.createPopover({
+            height:65,
+            width:250,
+            title:'Name'
+        });
 
         var popview = Ti.UI.createView({
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             layout: 'vertical',
             visible: true,
             height:'auto',
@@ -284,7 +294,8 @@ exports.showView = function(){
         popview.add(queryData.textfield);
         
         var btn = Ti.UI.createButton({
-            title:'Submit'
+            title:'Submit',
+            width: 250, height: 'auto'
         });
         // btn.callback = function(){
             // alert("submit in popover");
