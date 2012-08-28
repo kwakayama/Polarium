@@ -100,7 +100,7 @@ if (Ti.version < 1.8 ) {
         new Window().open();
         
     } else{
-        
+        var attempts = 3;
         // create root window
         var w = Ti.UI.createWindow({
             backgroundColor:'#ffffff',
@@ -149,21 +149,35 @@ if (Ti.version < 1.8 ) {
                 w.close();
                 new Window().open();    
             } else{
-                alert('Sorry your Pin is not correct :(');
-            }
+                    if (attempts === 0) {
+                        
+                        alert('Your Data has been deleted');
+                        VARS.GV.wipeData();
+                        w.close();
+                        new Window().open();
+                        
+                    }else{
+                        alert('Sorry your Pin is not correct :(\nYou have '+attempts+' attempts left');   
+                    }
+                }
         });
         function checkPin(tmpPwd){
-            Ti.API.log('tmpPwd: '+tmpPwd);
-            pin = VARS.GV.getTmpPin();
-            
-            Ti.API.log("hello pin: "+pin);
-            
-            if (pin === tmpPwd) {
-                return true;    
-            }else{
-                return false;
-            }  
-        }
+
+                pin = VARS.GV.getTmpPin();
+                
+                if (pin === tmpPwd) {
+                    
+                    //reset versuche
+                    attempts = 3
+                    return true;
+                        
+                }else{
+                    
+                    //ziehe ein versuch ab
+                    attempts = attempts - 1;
+                    return false;
+                }  
+            }
         
         v.add(lbl);
         v.add(tmpPwd);
@@ -179,7 +193,7 @@ if (Ti.version < 1.8 ) {
     
     Titanium.App.addEventListener('resume',function(){
         Ti.API.log("getissetpin: "+VARS.GV.getIsSetPin());
-        
+        var attempts = 3;
         //check if pin is set to armed
         if (VARS.GV.getIsSetPin() === false) {
             
@@ -234,18 +248,33 @@ if (Ti.version < 1.8 ) {
                 if (checkPin(tmpPwd.getValue())) {
                     w.close();    
                 } else{
-                    alert('Sorry your Pin is not correct :(');
+                    if (attempts === 0) {
+                        
+                        alert('Your Data has been deleted');
+                        VARS.GV.wipeData();
+                        w.close();
+                        Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+                        
+                    }else{
+                        alert('Sorry your Pin is not correct :(\nYou have '+attempts+' attempts left');   
+                    }
                 }
             });
+                        
             function checkPin(tmpPwd){
-                Ti.API.log('tmpPwd: '+tmpPwd);
+
                 pin = VARS.GV.getTmpPin();
                 
-                Ti.API.log("hello pin: "+pin);
-                
                 if (pin === tmpPwd) {
-                    return true;    
+                    
+                    //reset versuche
+                    attempts = 3
+                    return true;
+                        
                 }else{
+                    
+                    //ziehe ein versuch ab
+                    attempts = attempts - 1;
                     return false;
                 }  
             }

@@ -1,6 +1,6 @@
 Logfile initialized
 [INFO] logfile = /Users/kenta/CODE/Titanium_workspace/PAPP/build.log
-[DEBUG] /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.1.0.GA/android/builder.py simulator PolarionApp /Users/kenta/android-sdk-macosx /Users/kenta/CODE/Titanium_workspace/PAPP de.kw.polarion 1 HVGA 
+[DEBUG] /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.1.0.GA/android/builder.py simulator PolarionApp /Users/kenta/android-sdk-macosx /Users/kenta/CODE/Titanium_workspace/PAPP popchallange-v1 1 HVGA 
 [INFO] Building PolarionApp for Android ... one moment
 [INFO] Titanium SDK version: 2.1.0 (06/28/12 12:16 6e3cab6)
 [DEBUG] Waiting for device to be ready ...

@@ -275,7 +275,7 @@ exports.ApplicationWindow = function() {
         }else{
             // Ti.API.log("no callback defined :(");
             // alert("no "+e.source.type);
-            Ti.API.info("no callback defined" + e.source.id);
+            Ti.API.info("no callback defined " + e.source.id);
         }
     });
 

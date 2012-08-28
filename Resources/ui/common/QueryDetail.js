@@ -130,16 +130,6 @@ exports.showView = function(arguments){
         top:-30
     });
     actInd.style = 2;
-    // actInd = Ti.UI.createActivityIndicator({
-      // color: 'green',
-      // font: {fontFamily:'Helvetica Neue', fontSize:26, fontWeight:'bold'},
-      // message: 'Loading...',
-      // style:Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
-      // top:10,
-      // left:10,
-      // height:'auto',
-      // width:'auto'
-    // });
     
     self.add(lbl);
     self.add(actInd);

@@ -2,6 +2,7 @@
 var self;
 var VARS;
 var Loginbutton;
+var actInd;
 var hasListener = false;
 //type of window
 exports.type = "full";
@@ -12,6 +13,10 @@ var Server_Field,
 
 //eventlistener for project popover
 Titanium.App.addEventListener('popoverProjects',function(obj){
+    
+    //hide loading animation
+    actInd.hide();
+    Loginbutton.setEnabled(true);
     
     //hide keyboard
     Server_Field.blur();
@@ -107,6 +112,17 @@ exports.createView = function() {
 };
 
 var loginButtonFkt = function(){
+    
+    //set loading animation
+    setTimeout(function() {
+        actInd.hide();
+        Loginbutton.setEnabled(true);
+
+    }, 5000);
+    actInd.show();
+    Loginbutton.setEnabled(false);
+
+    
     //get input fields
     var loginData = {
         username : Username_Field.getValue(),
@@ -231,10 +247,20 @@ exports.showView = function(){
         title:'Submit'
     });
     
+    actInd = Titanium.UI.createActivityIndicator({
+        //width:30,
+        //height:30,
+        //left:150,
+        top:10
+    });
+    actInd.style = 2;
+    
+    
     // Loginbutton.addEventListener('click',loginButtonFkt);
     Loginbutton.callback = loginButtonFkt;
     hasListener = true;
     self.add(Loginbutton);
+    self.add(actInd);
     
     // Show Stuff
     self.show();

@@ -57,7 +57,7 @@ var attr = function(element, attrname, errorcallback, required) {
 }
 
 var apiErrorHandler = function(msg, errcode, callback) {
-    log("API ERROR: ["+errcode+"] "+msg);
+    //log("API ERROR: ["+errcode+"] "+msg);
     //delegate error
     callback(msg, errcode);
 }

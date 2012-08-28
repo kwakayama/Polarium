@@ -6,11 +6,11 @@ var isFirstQueryItem = true;
 // Common Global Variables
 var GV  =
 {
-    sessionID: '',
-    currentWorkItemQueryID: 1,
-    currentStage:'',
-    previousStage:'',
-    currentProjectId:'',
+    sessionID : '',
+    currentWorkItemQueryID : 1,
+    currentStage : '',
+    previousStage : '',
+    currentProjectId : '',
     removeAllChildren : function(viewObject){
         // alert("type: " + viewObject.type);
         if (typeof viewObject !== 'undefined' && typeof viewObject.children !== 'undefined') {
