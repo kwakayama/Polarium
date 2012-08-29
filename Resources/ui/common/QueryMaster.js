@@ -95,7 +95,7 @@ function openPopover(e){
         popover.setWidth(320)
     }else if (title === 'Due Date'){
         popover.setHeight(560);
-        popover.setWidth(500);
+        popover.setWidth(320);
     }
 
     var popview = Ti.UI.createView({
@@ -168,7 +168,8 @@ function openPopover(e){
         });
         
         var allbtn = Ti.UI.createButton({
-           title:'set to all' 
+           title:'set to all',
+           width:320
         });
         allbtn.addEventListener('click',function(){
             VARS.GV.saveQueryData(title, 'all');

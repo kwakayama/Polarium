@@ -86,3 +86,4 @@ Logfile initialized
 [DEBUG] found splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/default.png
 [TRACE] Writing out AndroidManifest.xml
 [ERROR] Error generating R.java from manifest
+[INFO] Android Emulator has exited
