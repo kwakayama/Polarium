@@ -8,6 +8,7 @@ var scrollEndCallback;
 var currentQueryData = {};
 //var to check if listener are set
 var setListener;
+var typeList = [];
 
 //type of window
 exports.type = "master";
@@ -40,15 +41,95 @@ function checkLable(title){
     }
 }
 
+Ti.App.addEventListener('setTypeList', function(obj){
+        
+    var myobjects = obj.value;
+        
+    var key; 
+    for (key in myobjects) {
+       var objItem = myobjects[key];
+       // alert(obj.id);
+       typeList.push(objItem.id);
+    }
+    
+    //after loading set the table listener
+    table.addEventListener('click',openPopover);
+
+        
+    // //open popover to choose project
+    // var popover = Ti.UI.iPad.createPopover({
+        // height:250,
+        // width:310,
+        // title:'Choose '+title
+    // });
+// 
+    // var popview = Ti.UI.createView({
+        // backgroundColor: 'transparent',
+        // layout: 'vertical',
+        // visible: true,
+        // height:'auto',
+        // width:'auto'
+    // });
+//     
+    // var column1 = Ti.UI.createPickerColumn();
+    // var i;
+    // for(i=0, ilen=statusList.length; i<ilen; i++){
+      // var row = Ti.UI.createPickerRow();
+//         
+      // var label = Ti.UI.createLabel({
+        // font:{fontSize:20,fontWeight:'bold'},
+        // text: statusList[i],
+        // textAlign:'left',
+        // height:'auto',
+        // width:'auto'
+      // });
+//       
+      // row.add(label);
+      // column1.addRow(row);
+    // }
+//     
+    // var picker = Ti.UI.createPicker({
+      // columns: [column1],
+      // visibleItems: 3,
+      // selectionIndicator: true
+    // });
+//     
+    // picker.setSelectedRow(0,0,true);
+//     
+    // var btn = Ti.UI.createButton({
+        // title:'Submit',
+        // width: 250, height: 'auto'
+    // });
+//    
+    // btn.addEventListener('click',function(){
+        // VARS.GV.saveQueryData(title, queryData.textfield.getValue());
+        // popover.hide();
+        // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
+    // });
+//     
+    // popview.add(picker);
+    // popview.add(btn);
+//     
+    // popover.add(popview);
+//    
+    // popover.show({view:table,animation:false});
+});
+
 function openPopover(e){
     //open modal window to choose project
     var title = e.row.id;
 
     var popover = Ti.UI.iPad.createPopover({
         height:65,
-        width:250,
+        width:320,
         title:title
     }); 
+    
+    //we need a biger popover for the picker
+    if (title === 'Type') {
+        popover.setHeight(250);
+        popover.setWidth(320)
+    }
 
     var popview = Ti.UI.createView({
         backgroundColor: 'transparent',
@@ -66,7 +147,7 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
@@ -76,7 +157,7 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
@@ -86,7 +167,7 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
@@ -96,23 +177,46 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
         popview.add(queryData.textfield);   
     } else if (title === 'Type'){
-        queryData.textfield = Ti.UI.createTextField({
-            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            color: '#336699',
-            hintText: title,
-            width: 250, height: 'auto',
-            // value: serverURL,
-            autocorrect: false 
-        });
-        popview.add(queryData.textfield);
+        // queryData.textfield = Ti.UI.createTextField({
+            // borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+            // color: '#336699',
+            // hintText: title,
+            // width: 250, height: 'auto',
+            // // value: serverURL,
+            // autocorrect: false 
+        // });
+        // popview.add(queryData.textfield);
+        alert("length"+typeList.length);
+        var column1 = Ti.UI.createPickerColumn();
+        var i;
+        for(i=0, ilen=typeList.length; i<ilen; i++){
+          var row = Ti.UI.createPickerRow();
+            
+          var label = Ti.UI.createLabel({
+            font:{fontSize:20,fontWeight:'bold'},
+            text: typeList[i],
+            textAlign:'left',
+            height:'auto',
+            width:'auto'
+          });
+          
+          row.add(label);
+          column1.addRow(row);
+        }
         
-        VARS.GV.getAllEnumOptionsForId();
+        var picker = Ti.UI.createPicker({
+          columns: [column1],
+          visibleItems: 3,
+          selectionIndicator: true
+        });
+        popview.add(picker);
+    
            
     } else if (title === 'Author'){
         
@@ -120,7 +224,7 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
@@ -131,7 +235,7 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
@@ -142,7 +246,7 @@ function openPopover(e){
             borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
             color: '#336699',
             hintText: title,
-            width: 250, height: 'auto',
+            width: 320, height: 'auto',
             // value: serverURL,
             autocorrect: false 
         });
@@ -151,7 +255,7 @@ function openPopover(e){
     
     var btn = Ti.UI.createButton({
         title:'Submit',
-        width: 250, height: 'auto'
+        width: 320, height: 'auto'
     });
     // btn.callback = function(){
         // alert("submit in popover");
@@ -160,7 +264,6 @@ function openPopover(e){
         VARS.GV.saveQueryData(title, queryData.textfield.getValue());
         popover.hide();
         Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
-        Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
     });
     
     
@@ -258,6 +361,8 @@ exports.showView = function(){
     
     //set CurrentQueryData
     getCurrentQueryData();
+    //init types array
+    VARS.GV.getAllEnumOptionsForId();
     
     var lbl = Ti.UI.createLabel({
         top:10,
@@ -505,8 +610,8 @@ exports.showView = function(){
     }
     table.setData(customTableData);
     
-    table.addEventListener('click',openPopover);
-
+    //clicklistener is set in the eventcallback
+    
     self.add(table);
         
     // Show Stuff

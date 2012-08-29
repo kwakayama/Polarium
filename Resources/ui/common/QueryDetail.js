@@ -89,7 +89,13 @@ Titanium.App.addEventListener('createQueryDetailTable',function(arg){
         row.add(rowCreated);
         row.add(rowStatus);
         customTableData.push(row);
-        table.setData(customTableData);
+        
+        if (customTableData.length > 0) {
+            table.setData(customTableData);
+        }else{
+            table = null;
+        } 
+        
     }
 });
 

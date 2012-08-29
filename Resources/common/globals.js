@@ -330,12 +330,13 @@ var GV  =
         this.loginThen(function() {
             var ok = function(enumoptions) {
                 Ti.API.log("OK getAllEnumOptionsForId");
-                alert(enumoptions);
+                // alert(enumoptions);
+                Ti.App.fireEvent('setTypeList', {name:'Type',value:enumoptions});
             };
             var error = function(argument) {
               alert('error');
             };
-            Polarium.trackerService.getAllEnumOptionsForId("elibrary", "type", ok, error);
+            Polarium.trackerService.getAllEnumOptionsForId(GV.currentProjectId, "type", ok, error);
         });
     },
     loginThen : function(then) {

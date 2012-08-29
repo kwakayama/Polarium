@@ -217,6 +217,7 @@ Polarium.types.EnumOption = function() {
     //construct from XML NodeElement
     this.fromElement = function(el, error) {
         
+        this.id = text(el,'id', error, true);
         this.enumid = text(el,'enumId', error, true);
         this.isDefault = text(el,'default', error, true);
         this.hidden = text(el,'hidden', error, true);

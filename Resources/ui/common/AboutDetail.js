@@ -35,12 +35,12 @@ exports.showView = function(){
     });
     
     var webview1 = Ti.UI.createWebView({
-        html:"<a>This App brings Polarion ALM to the iPad.<br>It's a free App, which is part of the Polarion Pop Challange 2012<br>Polarion is a Application Lifecycle Management Service, specially used by Enterprises. This App is not familiar with Polarion Software GmbH.</a>",
-        height:70
+        html:"<a style='font-family:arial;color:black;font-size:20px;'>This App brings Polarion ALM to the iPad.<br>It's a free App, which is part of the Polarion Pop Challange 2012<br>Polarion is a Application Lifecycle Management Service, specially used by Enterprises. This App is not familiar with Polarion Software GmbH.</a>",
+        height:155
     });
     
     var webview2 = Ti.UI.createWebView({
-        html:"<a>For More Information please \"Click Me\"</a>",
+        html:"<a style='font-family:arial;color:black;font-size:20px;'>For More Information please \"Click Me\"</a>",
         height:70
     });
     webview2.callback = function(){
