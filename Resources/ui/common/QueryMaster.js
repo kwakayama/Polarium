@@ -20,23 +20,23 @@ function checkLable(title){
     if (title === 'Name'){
         return (result.name !== '' && result.name !== null && typeof result.name !== 'undefined') ? result.name : 'new Query';
     } else if (title === 'Title'){
-        return (result.title !== '' && result.title !== null && typeof result.name !== 'undefined') ? result.title : 'alle';
+        return (result.title !== '' && result.title !== null && typeof result.name !== 'undefined') ? result.title : 'all';
     } else if(title === 'Status'){
-        return (result.status !== '' && result.status !== null && typeof result.name !== 'undefined') ? result.status : 'alle';
+        return (result.status !== '' && result.status !== null && typeof result.name !== 'undefined') ? result.status : 'all';
     } else if(title === 'Due Date'){
-        return (result.duedate !== '' && result.duedate !== null && typeof result.name !== 'undefined') ? result.duedate : 'alle';
+        return (result.duedate !== '' && result.duedate !== null && typeof result.name !== 'undefined') ? result.duedate : 'all';
     } else if(title === 'Timepoint'){
-        return (result.timepoint !== '' && result.timepoint !== null && typeof result.name !== 'undefined') ? result.timepoint : 'alle';
+        return (result.timepoint !== '' && result.timepoint !== null && typeof result.name !== 'undefined') ? result.timepoint : 'all';
     } else if(title === 'Type'){
-        return (result.type !== '' && result.type !== null && typeof result.name !== 'undefined') ? result.type : 'alle';
+        return (result.type !== '' && result.type !== null && typeof result.name !== 'undefined') ? result.type : 'all';
     } else if(title === 'Author'){
-        return (result.author !== '' && result.author !== null && typeof result.name !== 'undefined') ? result.author : 'alle';
+        return (result.author !== '' && result.author !== null && typeof result.name !== 'undefined') ? result.author : 'all';
     } else if(title === 'Assignables'){
-        return (result.assignables !== '' && result.assignables !== null && typeof result.name !== 'undefined') ? result.assignables : 'alle';
+        return (result.assignables !== '' && result.assignables !== null && typeof result.name !== 'undefined') ? result.assignables : 'all';
     } else if(title === 'Custom'){
-        return (result.custom !== '' && result.custom !== null && typeof result.name !== 'undefined') ? result.custom : 'alle';
+        return (result.custom !== '' && result.custom !== null && typeof result.name !== 'undefined') ? result.custom : 'all';
     } else{
-        return 'alle';
+        return 'all';
     }
 }
 
