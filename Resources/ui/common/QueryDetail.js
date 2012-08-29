@@ -31,72 +31,82 @@ Titanium.App.addEventListener('createQueryDetailTable',function(arg){
     var workitems = arg.workitems;
     
     lbl.text = 'Query Results: ('+workitems.length+')';
+    if (workitems.length > 0) {
+        var customTableData = [];
+        var key;
+        for (key in workitems) {
+            var obj = workitems[key];
+            Ti.API.log('title: '+obj.title);
+            Ti.API.log('status: '+obj.status);
+            Ti.API.log('created: '+obj.created);
+            
+            var row = Titanium.UI.createTableViewRow({
+                height:50
+            });
+            var rowID = Titanium.UI.createLabel({
+                text: obj.id,
+                font:{fontSize:12,fontWeight:'bold'},
+                height:'auto',
+                width:'auto',
+                textAlign:'left',
+                top:27,
+                left:5,
+                height:'auto'
+            });
+            var rowTitle = Titanium.UI.createLabel({
+                text: trimTitle(obj.title),
+                font:{fontSize:16,fontWeight:'bold'},
+                height:'auto',
+                width:'auto',
+                textAlign:'left',
+                top:5,
+                left:5,
+                wordWrap:true,
+                height:'auto'
+            });
+            var rowStatus = Titanium.UI.createLabel({
+                text: obj.status,
+                font:{fontSize:12,fontWeight:'bold'},
+                height:'auto',
+                width:'auto',
+                textAlign:'left',
+                top:27,
+                left:100,
+                height:'auto'
+            });
+            var rowCreated = Titanium.UI.createLabel({
+                text: obj.created,
+                font:{fontSize:12,fontWeight:'bold'},
+                height:'auto',
+                width:'auto',
+                textAlign:'left',
+                top:27,
+                left:200,
+                height:'auto'
+            });
+            row.add(rowTitle);
+            row.add(rowID);
+            row.add(rowCreated);
+            row.add(rowStatus);
+            customTableData.push(row);
+            
+        }
+        table.setData(customTableData);
+        table.setAllowsSelection(true);
+
+    }else{
         
-    var customTableData = [];
-    var key;
-    for (key in workitems) {
-        var obj = workitems[key];
-        Ti.API.log('title: '+obj.title);
-        Ti.API.log('status: '+obj.status);
-        Ti.API.log('created: '+obj.created);
-        
+        //plain table
+        var customTableData = [];
         var row = Titanium.UI.createTableViewRow({
             height:50
         });
-        var rowID = Titanium.UI.createLabel({
-            text: obj.id,
-            font:{fontSize:12,fontWeight:'bold'},
-            height:'auto',
-            width:'auto',
-            textAlign:'left',
-            top:27,
-            left:5,
-            height:'auto'
-        });
-        var rowTitle = Titanium.UI.createLabel({
-            text: trimTitle(obj.title),
-            font:{fontSize:16,fontWeight:'bold'},
-            height:'auto',
-            width:'auto',
-            textAlign:'left',
-            top:5,
-            left:5,
-            wordWrap:true,
-            height:'auto'
-        });
-        var rowStatus = Titanium.UI.createLabel({
-            text: obj.status,
-            font:{fontSize:12,fontWeight:'bold'},
-            height:'auto',
-            width:'auto',
-            textAlign:'left',
-            top:27,
-            left:100,
-            height:'auto'
-        });
-        var rowCreated = Titanium.UI.createLabel({
-            text: obj.created,
-            font:{fontSize:12,fontWeight:'bold'},
-            height:'auto',
-            width:'auto',
-            textAlign:'left',
-            top:27,
-            left:200,
-            height:'auto'
-        });
-        row.add(rowTitle);
-        row.add(rowID);
-        row.add(rowCreated);
-        row.add(rowStatus);
         customTableData.push(row);
-        
-        if (customTableData.length > 0) {
-            table.setData(customTableData);
-        }else{
-            table = null;
-        } 
+        table.setData(customTableData);
+        table.setAllowsSelection(false);
         
     }
+    
 });
 
 

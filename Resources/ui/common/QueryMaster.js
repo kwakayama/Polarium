@@ -9,6 +9,7 @@ var currentQueryData = {};
 //var to check if listener are set
 var setListener;
 var typeList = [];
+var timepointList = [];
 
 //type of window
 exports.type = "master";
@@ -48,76 +49,36 @@ Ti.App.addEventListener('setTypeList', function(obj){
     var key; 
     for (key in myobjects) {
        var objItem = myobjects[key];
-       // alert(obj.id);
        typeList.push(objItem.id);
     }
+    typeList.push('all');
     
     //after loading set the table listener
     table.addEventListener('click',openPopover);
+    table.touchEnabled = true;
 
-        
-    // //open popover to choose project
-    // var popover = Ti.UI.iPad.createPopover({
-        // height:250,
-        // width:310,
-        // title:'Choose '+title
-    // });
-// 
-    // var popview = Ti.UI.createView({
-        // backgroundColor: 'transparent',
-        // layout: 'vertical',
-        // visible: true,
-        // height:'auto',
-        // width:'auto'
-    // });
-//     
-    // var column1 = Ti.UI.createPickerColumn();
-    // var i;
-    // for(i=0, ilen=statusList.length; i<ilen; i++){
-      // var row = Ti.UI.createPickerRow();
-//         
-      // var label = Ti.UI.createLabel({
-        // font:{fontSize:20,fontWeight:'bold'},
-        // text: statusList[i],
-        // textAlign:'left',
-        // height:'auto',
-        // width:'auto'
-      // });
-//       
-      // row.add(label);
-      // column1.addRow(row);
+});
+
+Ti.App.addEventListener('setTimepointList', function(obj){
+    
+    timepointList = obj.value;
+    timepointList.push('all');
+    // var myobjects = obj.value;
+        // alert(myobjects);
+    // var key; 
+    // for (key in myobjects) {
+       // var objItem = myobjects[key];
+       // Ti.API.log("test");
+       // Ti.API.log("push : " + objItem.id);
+       // timepointList.push(objItem.id);
     // }
-//     
-    // var picker = Ti.UI.createPicker({
-      // columns: [column1],
-      // visibleItems: 3,
-      // selectionIndicator: true
-    // });
-//     
-    // picker.setSelectedRow(0,0,true);
-//     
-    // var btn = Ti.UI.createButton({
-        // title:'Submit',
-        // width: 250, height: 'auto'
-    // });
-//    
-    // btn.addEventListener('click',function(){
-        // VARS.GV.saveQueryData(title, queryData.textfield.getValue());
-        // popover.hide();
-        // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
-    // });
-//     
-    // popview.add(picker);
-    // popview.add(btn);
-//     
-    // popover.add(popview);
-//    
-    // popover.show({view:table,animation:false});
+
 });
 
 function openPopover(e){
     //open modal window to choose project
     var title = e.row.id;
+    var picker;
 
     var popover = Ti.UI.iPad.createPopover({
         height:65,
@@ -126,7 +87,7 @@ function openPopover(e){
     }); 
     
     //we need a biger popover for the picker
-    if (title === 'Type') {
+    if (title === 'Type' || title === 'Timepoint') {
         popover.setHeight(250);
         popover.setWidth(320)
     }
@@ -173,26 +134,34 @@ function openPopover(e){
         });
         popview.add(queryData.textfield);   
     } else if (title === 'Timepoint'){
-        queryData.textfield = Ti.UI.createTextField({
-            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            color: '#336699',
-            hintText: title,
-            width: 320, height: 'auto',
-            // value: serverURL,
-            autocorrect: false 
+        
+        var column1 = Ti.UI.createPickerColumn();
+        var i;
+        Ti.API.log("timepointlist length: "+timepointList.length);
+        for(i=0, ilen=timepointList.length; i<ilen; i++){
+          var row = Ti.UI.createPickerRow();
+            
+          var label = Ti.UI.createLabel({
+            font:{fontSize:20,fontWeight:'bold'},
+            text: timepointList[i],
+            textAlign:'left',
+            height:'auto',
+            width:'auto'
+          });
+          
+          row.add(label);
+          column1.addRow(row);
+        }
+        
+        picker = Ti.UI.createPicker({
+          columns: [column1],
+          visibleItems: 3,
+          selectionIndicator: true
         });
-        popview.add(queryData.textfield);   
+        popview.add(picker);
+           
     } else if (title === 'Type'){
-        // queryData.textfield = Ti.UI.createTextField({
-            // borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            // color: '#336699',
-            // hintText: title,
-            // width: 250, height: 'auto',
-            // // value: serverURL,
-            // autocorrect: false 
-        // });
-        // popview.add(queryData.textfield);
-        alert("length"+typeList.length);
+        
         var column1 = Ti.UI.createPickerColumn();
         var i;
         for(i=0, ilen=typeList.length; i<ilen; i++){
@@ -210,7 +179,7 @@ function openPopover(e){
           column1.addRow(row);
         }
         
-        var picker = Ti.UI.createPicker({
+        picker = Ti.UI.createPicker({
           columns: [column1],
           visibleItems: 3,
           selectionIndicator: true
@@ -261,7 +230,13 @@ function openPopover(e){
         // alert("submit in popover");
     // };
     btn.addEventListener('click',function(){
-        VARS.GV.saveQueryData(title, queryData.textfield.getValue());
+        if (title !== 'Type' && title !== 'Timepoint') {
+            VARS.GV.saveQueryData(title, queryData.textfield.getValue());    
+        }else{
+            //there is a picker
+            VARS.GV.saveQueryData(title, picker.getSelectedRow(0).children[0].text);    
+        }
+        
         popover.hide();
         Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
     });
@@ -363,6 +338,8 @@ exports.showView = function(){
     getCurrentQueryData();
     //init types array
     VARS.GV.getAllEnumOptionsForId();
+    VARS.GV.getAllTimepoints();
+
     
     var lbl = Ti.UI.createLabel({
         top:10,
@@ -426,6 +403,7 @@ exports.showView = function(){
     table = Ti.UI.createTableView({
         // data:tableData
     });
+    table.touchEnabled = false;
 
     //cool pull down - refresh feature
 

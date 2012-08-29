@@ -326,6 +326,26 @@ var GV  =
             Polarium.trackerService.getAssignables(ok, error);
         });
     },
+    getAllTimepoints : function(){
+        this.loginThen(function() {
+            var ok = function(timepoints) {
+                
+                var key; 
+                var typeList = [];
+                for (key in timepoints) {
+                   var objItem = timepoints[key];
+                   typeList.push(objItem.id);
+                }
+                
+                
+                Ti.App.fireEvent('setTimepointList', {name:'Timepoint',value:typeList});
+            };
+            var error = function(argument) {
+              alert('error');
+            };
+            Polarium.trackerService.getTimepoints(GV.currentProjectId, ok, error);
+        });
+    },
     getAllEnumOptionsForId : function(argument) {
         this.loginThen(function() {
             var ok = function(enumoptions) {
@@ -443,7 +463,7 @@ var getQueryStringById = function(id){
         isFirstQueryItem = true;
         //queryItemCount is a helper variable to indicate the first queryitem. we need this for the and connection
         queryItemCount = 0;
-        query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author) + queryHelper('project.id',GV.currentProjectId);
+        query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author) + queryHelper('project.id',GV.currentProjectId) + queryHelper('timePoint.id',result.timepoint);
         isFirstQueryItem = false;
         Ti.API.log('query: '+query);
             
@@ -468,7 +488,7 @@ function queryHelper(title, value){
     
     //expert mode ;)
     if (title === 'custom') {
-        if (value === '' || value === null) {
+        if (value === '' || value === null || value === 'all') {
             //return nothing
             //result += 'NOT '+title+':######NULL';
         } else{
@@ -478,7 +498,7 @@ function queryHelper(title, value){
         }
     }else{
         //is the value empty or null then set value to search ALL
-        if (value === '' || value === null) {
+        if (value === '' || value === null || value === 'all') {
             //return nothing
             //result += 'NOT '+title+':######NULL';
         } else{

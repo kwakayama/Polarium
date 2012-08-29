@@ -1,13 +1,88 @@
 Logfile initialized
 [INFO] logfile = /Users/kenta/CODE/Titanium_workspace/PAPP/build.log
-[DEBUG] /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.1.0.GA/android/builder.py simulator PolarionApp /Users/kenta/android-sdk-macosx /Users/kenta/CODE/Titanium_workspace/PAPP popchallange-v1 1 HVGA 
+[DEBUG] /Users/kenta/Library/Application Support/Titanium/mobilesdk/osx/2.1.1.GA/android/builder.py simulator PolarionApp /Users/kenta/android-sdk-macosx /Users/kenta/CODE/Titanium_workspace/PAPP popchallange-v1 1 HVGA 
 [INFO] Building PolarionApp for Android ... one moment
-[INFO] Titanium SDK version: 2.1.0 (06/28/12 12:16 6e3cab6)
+[INFO] Titanium SDK version: 2.1.1 (07/27/12 14:01 0fd84a2)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[TRACE] adb devices returned 0 devices/emulators
-[ERROR] Timed out waiting for emulator to be ready, you may need to close the emulator and try again
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[DEBUG] Device connected... (waited 25 seconds)
+[DEBUG] waited 25.246451 seconds on emulator to get ready
+[INFO] Waiting for the Android Emulator to become available
+[DEBUG] popchallange-v1 installed? False
+[INFO] Fastdev server running, deploying in Fastdev mode
+[INFO] Copying CommonJS modules...
+[INFO] Copying project resources..
+[INFO] Detected change in tiapp.xml, or assets deleted. Forcing full re-build...
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/appicon.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/appicon.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/default.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/app.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/app.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/aboutIcon.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/aboutIcon.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/arrow_down.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/arrow_down.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/dhbw_logo.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/dhbw_logo.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/polarionpop.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/polarionpop.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/settingsIcon.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/settingsIcon.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/tsystems_header.gif => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/tsystems_header.gif
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/assets/images/workitemsIcon.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/assets/images/workitemsIcon.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/common/aes.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/common/aes.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/common/globals.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/common/globals.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/common/polarium_api.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/common/polarium_api.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/KS_nav_ui.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/KS_nav_ui.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/KS_nav_views.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/KS_nav_views.png
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/modules/iphone/Settings.bundle/en.lproj/Root.strings => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/modules/iphone/Settings.bundle/en.lproj/Root.strings
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/modules/iphone/Settings.bundle/Root.plist => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/modules/iphone/Settings.bundle/Root.plist
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/AboutDetail.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/AboutDetail.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/DashboardWindow.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/DashboardWindow.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/Detail.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/Detail.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/Login.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/Login.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/Master.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/Master.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/QueryDetail.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/QueryDetail.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/QueryMaster.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/QueryMaster.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/SettingsDetail.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/SettingsDetail.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/common/TemplateView.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/common/TemplateView.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/handheld/android/ApplicationWindow.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/handheld/android/ApplicationWindow.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/handheld/ios/ApplicationWindow.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/handheld/ios/ApplicationWindow.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/handheld/mobileweb/ApplicationWindow.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/handheld/mobileweb/ApplicationWindow.js
+[TRACE] COPYING CREATED FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/ui/tablet/ApplicationWindow.js => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/ui/tablet/ApplicationWindow.js
+[TRACE] Generating Java Classes
+[DEBUG] Processing Android resource drawables
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-land-hdpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-land-hdpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-land-ldpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-land-ldpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-port-hdpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-port-hdpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-port-ldpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-port-ldpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-hdpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-land-hdpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-ldpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-land-ldpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-mdpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-land-mdpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-hdpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-port-hdpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-ldpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-port-ldpi/default_d44e27d97b.png
+[TRACE] COPYING FILE: /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-mdpi/default.png => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-port-mdpi/default_d44e27d97b.png
+[DEBUG] app stylesheet => /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/gen/popchallange-v1/ApplicationStylesheet.java
+[DEBUG] copying app icon: /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/appicon.png
+[DEBUG] generating theme.xml
+[DEBUG] found drawable-long-land-hdpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-land-hdpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-land-hdpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-land-hdpi/background.png
+[DEBUG] found drawable-long-land-ldpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-land-ldpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-land-ldpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-land-ldpi/background.png
+[DEBUG] found drawable-long-port-hdpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-port-hdpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-port-hdpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-port-hdpi/background.png
+[DEBUG] found drawable-long-port-ldpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-port-ldpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-long-port-ldpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-long-port-ldpi/background.png
+[DEBUG] found drawable-notlong-land-hdpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-hdpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-hdpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-land-hdpi/background.png
+[DEBUG] found drawable-notlong-land-ldpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-ldpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-ldpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-land-ldpi/background.png
+[DEBUG] found drawable-notlong-land-mdpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-mdpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-land-mdpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-land-mdpi/background.png
+[DEBUG] found drawable-notlong-port-hdpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-hdpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-hdpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-port-hdpi/background.png
+[DEBUG] found drawable-notlong-port-ldpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-ldpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-ldpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-port-ldpi/background.png
+[DEBUG] found drawable-notlong-port-mdpi splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-mdpi/default.png
+[DEBUG] copying /Users/kenta/CODE/Titanium_workspace/PAPP/Resources/android/images/res-notlong-port-mdpi/default.png splash screen to /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/res/drawable-notlong-port-mdpi/background.png
+[DEBUG] found splash screen at /Users/kenta/CODE/Titanium_workspace/PAPP/build/android/bin/assets/Resources/default.png
+[TRACE] Writing out AndroidManifest.xml
+[ERROR] Error generating R.java from manifest
