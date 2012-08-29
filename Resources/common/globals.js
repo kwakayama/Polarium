@@ -2,6 +2,7 @@ var Polarium = require('/common/polarium_api').Polarium;
 var CryptoJS  = require('/common/aes').CryptoJS;
 
 var isFirstQueryItem = true;
+var queryItemCount;
 
 // Common Global Variables
 var GV  =
@@ -439,8 +440,10 @@ var getQueryStringById = function(id){
         
         
         isFirstQueryItem = true;
+        //queryItemCount is a helper variable to indicate the first queryitem. we need this for the and connection
+        queryItemCount = 0;
         query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author);
-        
+        isFirstQueryItem = false;
         Ti.API.log('query: '+query);
             
     } else{
@@ -451,12 +454,12 @@ var getQueryStringById = function(id){
 };
 
 function queryHelper(title, value){
-    
+    Ti.API.log("queryItemCount "+queryItemCount);
     var result = '';
     var and = '';
     
-    if (isFirstQueryItem === true) {
-        isFirstQueryItem = false;
+    if (queryItemCount === 0) {
+        and = '';
     } else{
         and = ' AND '; 
     }
@@ -469,6 +472,7 @@ function queryHelper(title, value){
         } else{
             result += and;
             result += value;
+            queryItemCount++;
         }
     }else{
         //is the value empty or null then set value to search ALL
@@ -478,6 +482,7 @@ function queryHelper(title, value){
         } else{
             result += and;
             result += title+':'+value;
+            queryItemCount++;
         }    
     }
     
