@@ -351,9 +351,9 @@ var GV  =
             function(err) { alert(err); });
     },
     encrypt : function(str){
-    
+
     //encrypt string with passphrase
-    var encrypted = CryptoJS.AES.encrypt(str, "Ich bin die Telekom - auf mich ist Verlass");
+    var encrypted = CryptoJS.AES.encrypt(str, "Ich bin die Telekom - auf mich ist Verlass"+Ti.Platform.id);
     return encrypted;
     
     },
@@ -362,7 +362,7 @@ var GV  =
         if(enc !== null){
            Ti.API.log("----start decrypting ----"+enc);
             //decrypt string with passphrase
-            var decrypted = CryptoJS.AES.decrypt(enc, "Ich bin die Telekom - auf mich ist Verlass");
+            var decrypted = CryptoJS.AES.decrypt(enc, "Ich bin die Telekom - auf mich ist Verlass"+Ti.Platform.id);
             //set encoding
             result = decrypted.toString(CryptoJS.enc.Utf8);
             Ti.API.log("----done decrypting: "+result);
