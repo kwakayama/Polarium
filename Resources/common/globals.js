@@ -463,7 +463,7 @@ var getQueryStringById = function(id){
         isFirstQueryItem = true;
         //queryItemCount is a helper variable to indicate the first queryitem. we need this for the and connection
         queryItemCount = 0;
-        query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author) + queryHelper('project.id',GV.currentProjectId) + queryHelper('timePoint.id',result.timepoint);
+        query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author) + queryHelper('project.id',GV.currentProjectId) + queryHelper('timePoint.id',result.timepoint) + queryHelper('dueDate',result.duedate);
         isFirstQueryItem = false;
         Ti.API.log('query: '+query);
             

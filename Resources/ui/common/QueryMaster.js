@@ -10,6 +10,9 @@ var currentQueryData = {};
 var setListener;
 var typeList = [];
 var timepointList = [];
+//for due date
+var startPickerVal;
+var endPickerVal;
 
 //type of window
 exports.type = "master";
@@ -90,6 +93,9 @@ function openPopover(e){
     if (title === 'Type' || title === 'Timepoint') {
         popover.setHeight(250);
         popover.setWidth(320)
+    }else if (title === 'Due Date'){
+        popover.setHeight(560);
+        popover.setWidth(500);
     }
 
     var popview = Ti.UI.createView({
@@ -124,15 +130,58 @@ function openPopover(e){
         });
         popview.add(queryData.textfield);  
     } else if (title === 'Due Date'){
-        queryData.textfield = Ti.UI.createTextField({
-            borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            color: '#336699',
-            hintText: title,
-            width: 320, height: 'auto',
-            // value: serverURL,
-            autocorrect: false 
+        
+        popview.backgroundColor = 'white';
+        
+        var lblStart = Ti.UI.createLabel({text:'Start Date'});
+        var lblEnd = Ti.UI.createLabel({text:'End Date'});
+        //create date picker
+        var currentTime = new Date();
+        var thisYear = currentTime.getFullYear();
+        
+        var picker1 = Ti.UI.createPicker({
+          type:Ti.UI.PICKER_TYPE_DATE,
+          minDate:new Date(thisYear-5,0,1),
+          maxDate:new Date(thisYear+5,11,31),
+          value:currentTime
         });
-        popview.add(queryData.textfield);   
+        
+        startPickerVal=currentTime;
+        
+        picker1.addEventListener('change',function(e){
+          Ti.API.info("User selected date: " + e.value.toLocaleString());
+          startPickerVal = e.value;
+        });
+        
+        var picker2 = Ti.UI.createPicker({
+          type:Ti.UI.PICKER_TYPE_DATE,
+          minDate:new Date(thisYear-5,0,1),
+          maxDate:new Date(thisYear+5,11,31),
+          value:currentTime
+        });
+        
+        endPickerVal = currentTime;
+        
+        picker2.addEventListener('change',function(e){
+          Ti.API.info("User selected date: " + e.value.toLocaleString());
+          endPickerVal = e.value;
+        });
+        
+        var allbtn = Ti.UI.createButton({
+           title:'set to all' 
+        });
+        allbtn.addEventListener('click',function(){
+            VARS.GV.saveQueryData(title, 'all');
+            popover.hide();
+            Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });    
+        });
+        
+        popview.add(lblStart);
+        popview.add(picker1);
+        popview.add(lblEnd);
+        popview.add(picker2);
+        popview.add(allbtn);
+           
     } else if (title === 'Timepoint'){
         
         var column1 = Ti.UI.createPickerColumn();
@@ -230,11 +279,40 @@ function openPopover(e){
         // alert("submit in popover");
     // };
     btn.addEventListener('click',function(){
-        if (title !== 'Type' && title !== 'Timepoint') {
+        if (title !== 'Type' && title !== 'Timepoint' && title !== 'Due Date') {
             VARS.GV.saveQueryData(title, queryData.textfield.getValue());    
         }else{
             //there is a picker
-            VARS.GV.saveQueryData(title, picker.getSelectedRow(0).children[0].text);    
+            if(title === 'Due Date'){
+                
+                alert("picker1:" + startPickerVal + "picker2:" + endPickerVal);
+                var startYear = startPickerVal.getFullYear();
+                var startMonth = startPickerVal.getMonth()+1;
+                if (startMonth < 10) {
+                    startMonth = '0'+startMonth;   
+                }
+                var startDay = startPickerVal.getDate();
+                if (startDay < 10) {
+                    startDay = '0'+startDay;   
+                }
+                
+                var endYear = endPickerVal.getFullYear();
+                var endMonth = endPickerVal.getMonth()+1;
+                if (endMonth < 10) {
+                    endMonth = '0'+endMonth;   
+                }
+                var endDay = endPickerVal.getDate();
+                if (endDay < 10) {
+                    endDay = '0'+endDay;   
+                }
+                
+                var polarionDate = "["+startYear+startMonth+startDay+" TO "+endYear+endMonth+endDay+"]";
+                
+                VARS.GV.saveQueryData(title, polarionDate);
+                
+            }else{
+                VARS.GV.saveQueryData(title, picker.getSelectedRow(0).children[0].text);
+            } 
         }
         
         popover.hide();
