@@ -283,7 +283,7 @@ var GV  =
             var error = function(argument) {
                 Ti.API.log("error - couldn't get workitems :()");
             };
-            Polarium.trackerService.queryWorkitems(query,"id", ["id", "title", "status", "created", "description"], ok, error);
+            Polarium.trackerService.queryWorkitems(query,"id", ["id", "type", "author", "title", "status", "created", "description"], ok, error);
         });
     },
     login : function(argument){
@@ -358,6 +358,18 @@ var GV  =
             };
             Polarium.trackerService.getAllEnumOptionsForId(GV.currentProjectId, "type", ok, error);
         });
+    },
+    getAssignableByWorkitemURI : function(wiURI){
+        this.loginThen(function() {
+            var ok = function(users) {
+                console.log("OK allowedAssignees");
+                Ti.App.fireEvent('openDetailPopover', {assignees:users});
+            };
+            var error = function(argument) {
+              alert('error');
+            };
+            Polarium.trackerService.getAllowedAssignees("subterra:data-service:objects:/default/"+GV.currentProjectId+"${WorkItem}"+wiURI, ok, error);
+        });  
     },
     loginThen : function(then) {
         credentials = this.getCredentials();

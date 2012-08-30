@@ -66,16 +66,6 @@ Ti.App.addEventListener('setTimepointList', function(obj){
     
     timepointList = obj.value;
     timepointList.push('all');
-    // var myobjects = obj.value;
-        // alert(myobjects);
-    // var key; 
-    // for (key in myobjects) {
-       // var objItem = myobjects[key];
-       // Ti.API.log("test");
-       // Ti.API.log("push : " + objItem.id);
-       // timepointList.push(objItem.id);
-    // }
-
 });
 
 function openPopover(e){
@@ -276,9 +266,7 @@ function openPopover(e){
         title:'Submit',
         width: 320, height: 'auto'
     });
-    // btn.callback = function(){
-        // alert("submit in popover");
-    // };
+
     btn.addEventListener('click',function(){
         if (title !== 'Type' && title !== 'Timepoint' && title !== 'Due Date') {
             VARS.GV.saveQueryData(title, queryData.textfield.getValue());    
