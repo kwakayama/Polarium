@@ -44,7 +44,7 @@ exports.showView = function(){
         height:70
     });
     webview2.callback = function(){
-        Ti.Platform.openURL("http://extensions.polarion.com/polarion/extensions/challenge.jsp");
+        Ti.Platform.openURL("http://polariumapp.com/");
     };
 
     
