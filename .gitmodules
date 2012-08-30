@@ -1,0 +1,3 @@
+[submodule "Resources/polarion.js"]
+	path = Resources/polarion.js
+	url = https://github.com/SBejga/Polarion.js.git
