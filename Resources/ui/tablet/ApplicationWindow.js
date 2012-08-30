@@ -2,6 +2,8 @@
 var self;
 
 var VARS;
+var chooseProjectBtn,
+    popover;
 
 //Application Window Component Constructor
 exports.ApplicationWindow = function() {
@@ -67,6 +69,105 @@ exports.ApplicationWindow = function() {
         }
     };
     
+    //eventlistener for project popover
+    Titanium.App.addEventListener('popoverChooseProjectButton',function(obj){
+        
+        chooseProjectBtn.setEnabled(true);
+
+        
+        var myprojects = obj.projects;
+        var projectList = [];
+        
+        var key; 
+        for (key in myprojects) {
+           var obj = myprojects[key];
+           // alert(obj.id);
+           projectList.push(obj.id);
+        }
+        //open popover to choose project
+        popover = Ti.UI.iPad.createPopover({
+            height:250,
+            width:310,
+            title:'Active Project: ' + VARS.GV.currentProjectId
+        });
+    
+        var popview = Ti.UI.createView({
+            backgroundColor: 'transparent',
+            layout: 'vertical',
+            visible: true,
+            height:'auto',
+            width:'auto'
+        });
+        
+        var column1 = Ti.UI.createPickerColumn();
+        var selectedProjectId = 0;
+        var i;
+        for(i=0, ilen=projectList.length; i<ilen; i++){
+          
+          if (projectList[i] === VARS.GV.currentProjectId) {
+              selectedProjectId = i;
+          }
+          
+          var row = Ti.UI.createPickerRow();
+            
+          var label = Ti.UI.createLabel({
+            font:{fontSize:20,fontWeight:'bold'},
+            text: projectList[i],
+            textAlign:'left',
+            height:'auto',
+            width:'auto'
+          });
+          
+          row.add(label);
+          column1.addRow(row);
+        }
+    
+        var picker = Ti.UI.createPicker({
+          columns: [column1],
+          visibleItems: 3,
+          selectionIndicator: true
+        });        
+        
+        var btn = Ti.UI.createButton({
+            title:'Submit',
+            height:'auto',
+            width:320
+        });
+    
+        btn.addEventListener('click',function(){
+            VARS.GVUpdate('currentProjectId',picker.getSelectedRow(0).children[0].text);
+            popover.hide();
+            // Ti.App.fireEvent('restart');
+        });
+        
+        // popview.add(lbl);
+        popview.add(picker);
+        popview.add(btn);
+        
+        popover.add(popview);
+        popover.show({view:chooseProjectBtn,animation:false});
+        
+        //set picker to active project        
+        picker.setSelectedRow(0,selectedProjectId,true);
+    });
+
+    
+    function chooseProjectBtnFkt(){
+        chooseProjectBtn.setEnabled(false);
+        VARS.GV.chooseProjectPopover();
+    }
+    function logoutBtnFkt(){
+        //Navigate  to Login View
+        Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
+        
+        if (typeof popover !== 'undefined') {
+            popover.hide();    
+        }
+        
+        //fire polarium logout request
+        VARS.GV.logout();
+    }
+    
     var showToolbar = function(type) {
         
         var flexSpace = Titanium.UI.createButton({
@@ -82,24 +183,8 @@ exports.ApplicationWindow = function() {
             });
             
             var logBtn = Ti.UI.createButton({title:'Logout'});
-            logBtn.addEventListener('click',function(){
-                //Navigate  to Login View
-                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
-                
-                //fire polarium logout request
-                VARS.GV.logout(); 
-            });
-            // logBtn.callback = function(){
-                // //Navigate  to Login View
-                // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
-//                 
-                // //fire polarium logout request
-                // VARS.GV.logout();
-            // };
-            // logBtn.hide();
-            // self.add(logBtn);
-            
-            
+            logBtn.addEventListener('click',logoutBtnFkt);
+               
             var newButton = Ti.UI.createButton({title:'New'});
             self.add(newButton);
             newButton.hide();
@@ -117,33 +202,26 @@ exports.ApplicationWindow = function() {
                 
                 VARS.GVUpdate('currentWorkItemQueryID',count);
                 Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryMaster', 'type':'master', 'params':'' } });
-                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'queryDetail', 'type':'detail', 'params':'' } });
                 
             };
-            self.setToolbar([newButton,flexSpace,refreshButton,flexSpace,flexSpace,flexSpace,logBtn]);
+            
+            chooseProjectBtn = Ti.UI.createButton({title:'Project'});
+            chooseProjectBtn.addEventListener('click',chooseProjectBtnFkt);
+            
+            self.setToolbar([newButton,flexSpace,refreshButton,flexSpace,chooseProjectBtn,flexSpace,logBtn]);
             
         } else if(type === 'logout'){
             
             var logBtn = Ti.UI.createButton({title:'Logout'});
-            logBtn.addEventListener('click',function(){
-                //Navigate  to Login View
-                Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
-                
-                //fire polarium logout request
-                VARS.GV.logout(); 
-            });
-            // logBtn.callback = function(){
-                // //Navigate  to Login View
-                // Ti.App.fireEvent('notification',{ name:'switchView', body:{'view':'login', 'type':'full', 'params':'' } });
-//                 
-                // //fire polarium logout request
-                // VARS.GV.logout();
-            // };
-//             
-            // logBtn.hide();
-            // self.add(logBtn);
+            logBtn.addEventListener('click',logoutBtnFkt);
             
-            self.setToolbar([flexSpace,flexSpace,flexSpace,flexSpace,flexSpace,flexSpace,logBtn]);
+            actInd = Ti.UI.createActivityIndicator();
+            actInd.style = 2;
+            
+            chooseProjectBtn = Ti.UI.createButton({title:'Project'});
+            chooseProjectBtn.addEventListener('click',chooseProjectBtnFkt);
+            
+            self.setToolbar([flexSpace,flexSpace,actInd,flexSpace,chooseProjectBtn,flexSpace,logBtn]);
         } else{
             //show blank toolbar        
             self.setToolbar([flexSpace]);

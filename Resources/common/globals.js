@@ -1,4 +1,4 @@
-var Polarium = require('/common/polarium_api').Polarium;
+var Polarium = require('/polarion.js/polarium_api').Polarium;
 var CryptoJS  = require('/common/aes').CryptoJS;
 
 var isFirstQueryItem = true;
@@ -301,9 +301,7 @@ var GV  =
     getprojects : function(argument) {
         
         this.loginThen(function() {
-            Ti.API.log('global getprojects');
             var ok = function(projects) {
-                Ti.API.log('start');
                 Ti.API.log(projects);
                 Ti.API.log("length of projects: "+projects.length);
                 
@@ -314,6 +312,23 @@ var GV  =
             };
             Polarium.projectService.getProjects(ok, error);
         });
+        
+    },
+    chooseProjectPopover : function(){
+        
+        this.loginThen(function() {
+            var ok = function(projects) {
+                Ti.API.log(projects);
+                Ti.API.log("length of projects: "+projects.length);
+                
+                Ti.App.fireEvent('popoverChooseProjectButton',{ projects:projects});
+            };
+            var error = function(argument){
+                Ti.API.log("error - couldn't get projects");
+            };
+            Polarium.projectService.getProjects(ok, error);
+        });
+        
     },
     getAssignables : function(){
         this.loginThen(function(){

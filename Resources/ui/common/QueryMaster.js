@@ -48,7 +48,7 @@ function checkLable(title){
 Ti.App.addEventListener('setTypeList', function(obj){
         
     var myobjects = obj.value;
-        
+    typeList = [];
     var key; 
     for (key in myobjects) {
        var objItem = myobjects[key];
@@ -406,6 +406,9 @@ exports.showView = function(){
     //init types array
     VARS.GV.getAllEnumOptionsForId();
     VARS.GV.getAllTimepoints();
+
+
+
 
     
     var lbl = Ti.UI.createLabel({

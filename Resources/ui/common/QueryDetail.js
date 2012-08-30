@@ -197,11 +197,11 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     descriptionRow.add(descriptionData);
     
     var authorLabel = Ti.UI.createLabel({
-        text:'Description',
+        text:'Author',
         left:'5%'
     });
     var authorData = Titanium.UI.createLabel({
-        text: wi.author,
+        text: wi.author.id,
         font:{fontSize:12,fontWeight:'bold'},
         height:'auto',
         width:'auto',
@@ -216,7 +216,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     //add rows to the section 
     section.add(idRow);
     // section.add(typeRow);
-    // section.add(authorRow);
+    section.add(authorRow);
     section.add(statusRow);
     section.add(assigneeRow);
     section.add(createdRow);
@@ -255,6 +255,7 @@ Titanium.App.addEventListener('createQueryDetailTable',function(arg){
             Ti.API.log('title: '+obj.title);
             Ti.API.log('status: '+obj.status);
             Ti.API.log('created: '+obj.created);
+            Ti.API.log('created: '+obj.id);
             
             var row = Titanium.UI.createTableViewRow({
                 height:50
