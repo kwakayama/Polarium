@@ -50,7 +50,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     var assignees = obj.assignees;
     
     var popover = Ti.UI.iPad.createPopover({
-        height:250,
+        height:350,
         width:300,
         title:wi.title
     }); 
@@ -181,20 +181,18 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
 
     var descriptionLabel = Ti.UI.createLabel({
         text:'Description',
-        left:'5%'
+        left:'5%',
+        top:6
     });
-    alert(wi);
-    var descriptionData = Titanium.UI.createLabel({
-        text: wi.description,
-        font:{fontSize:12,fontWeight:'bold'},
-        height:'auto',
-        width:'auto',
-        textAlign:'left',
-        left:'40%',
-        height:'auto'
+    var descriptionCss = "<style type='text/css'>*{font-family:'Helvetica';font-size:12px;font-style:normal !important;font-weight:bold;}</style>";
+    var descriptionData = Ti.UI.createWebView({
+        html:wi.description.content+descriptionCss,
+        left:'37%',
+        height:145
     });
-    // var descriptionData = 
-    var descriptionRow = Ti.UI.createTableViewRow();
+    var descriptionRow = Ti.UI.createTableViewRow({
+        height:150
+    });
     descriptionRow.add(descriptionLabel);
     descriptionRow.add(descriptionData);
     
