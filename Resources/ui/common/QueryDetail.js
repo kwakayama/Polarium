@@ -39,7 +39,7 @@ function tableClickFkt (e){
     }
     actInd.show();
     VARS.GV.getAssignableByWorkitemURI(wi.uri);
-    alert(wi);
+    // alert(wi);
 }
 
 Titanium.App.addEventListener('openDetailPopover', function(obj){
@@ -122,7 +122,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     
     var assigneeRow = Ti.UI.createTableViewRow();        
     var assigneeLabel = Ti.UI.createLabel({
-        text:'Assignee',
+        text:'Assignees',
         left:'5%'
     });
     assigneeRow.add(assigneeLabel);
@@ -183,8 +183,9 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
         text:'Description',
         left:'5%'
     });
+    alert(wi);
     var descriptionData = Titanium.UI.createLabel({
-        text: wi.description.content,
+        text: wi.description,
         font:{fontSize:12,fontWeight:'bold'},
         height:'auto',
         width:'auto',
@@ -192,6 +193,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
         left:'40%',
         height:'auto'
     });
+    // var descriptionData = 
     var descriptionRow = Ti.UI.createTableViewRow();
     descriptionRow.add(descriptionLabel);
     descriptionRow.add(descriptionData);
@@ -221,7 +223,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     section.add(assigneeRow);
     section.add(createdRow);
     section.add(updatedRow);
-    // section.add(descriptionRow);
+    section.add(descriptionRow);
     
     var detailTable = Ti.UI.createTableView({
         rowHeight:'auto',
