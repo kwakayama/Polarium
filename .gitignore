@@ -3,7 +3,7 @@ build
 build/*
 build/iphone/*
 build/android/*
-.DS_Store
+*.DS_Store
 .settings
 build.log
 .fastdev.lock
