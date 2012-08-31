@@ -391,11 +391,13 @@ var GV  =
         
         var host = credentials.serverURL;
         if (host.indexOf('http://') > -1) {
-        	host = host.slice(host.indexOf('http://')+1);
+        	host = host.substring(7);
+        	Ti.API.log("host: "+host+" (http)");
  			Polarium.connection.setProtocol('http');
         }
         if (host.indexOf('https://') > -1) {
-        	host = host.slice(host.indexOf('https://')+1);
+        	host = host.substring(8);
+        	Ti.API.log("host: "+host+" (https)");
  			Polarium.connection.setProtocol('https');
         }
                
