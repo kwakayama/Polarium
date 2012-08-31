@@ -51,7 +51,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     var assignees = wi.assignees;
     
     var popover = Ti.UI.iPad.createPopover({
-        height:350,
+        height:320,
         width:300,
         title:wi.title
     }); 
