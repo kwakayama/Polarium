@@ -9,6 +9,8 @@ See "contest":http://extensions.polarion.com/polarion/extensions/challenge.jsp
 
 Polarion is a Application Lifecycle Management Service, specially used by Enterprises. This app is not familiar with Polarion Software GmbH.
 
+You find the cool Polarion.js API "here":https://github.com/SBejga/Polarion.js
+
 Feel free to like us at on "Facebook":http://www.facebook.com/PolariumApp ;-)
 
 h2. Support
