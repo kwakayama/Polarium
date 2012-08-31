@@ -9,7 +9,7 @@
     </deployment-targets>
     <sdk-version>2.1.1.GA</sdk-version>
     <id>popchallange-v1</id>
-    <name>PolarionApp</name>
+    <name>Polarium</name>
     <version>1.0</version>
     <publisher>Kentaro Wakayama</publisher>
     <url>http://</url>

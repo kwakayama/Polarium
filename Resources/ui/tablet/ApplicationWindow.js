@@ -191,7 +191,7 @@ exports.ApplicationWindow = function() {
             newButton.callback = function(argument) {
 
                 //open database
-                var db = Ti.Database.open('PolarionApp');
+                var db = Ti.Database.open('Polarium');
                 db.execute('INSERT INTO queries DEFAULT VALUES');
                 
                 //get count of table
@@ -286,7 +286,7 @@ exports.ApplicationWindow = function() {
     // create root window
     self = Ti.UI.createWindow({
         backgroundColor:'#000000',
-        title:'PolarionApp',
+        title:'Polarium',
         barColor:'#336699',
         tabBarHidden:true
     });
