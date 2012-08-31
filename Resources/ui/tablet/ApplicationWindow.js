@@ -285,7 +285,7 @@ exports.ApplicationWindow = function() {
 
     // create root window
     self = Ti.UI.createWindow({
-        backgroundColor:'#ffffff',
+        backgroundColor:'#000000',
         title:'PolarionApp',
         barColor:'#336699',
         tabBarHidden:true
@@ -320,20 +320,19 @@ exports.ApplicationWindow = function() {
         top:0,
         bottom:0,
         left:0,
-        width:240,
+        width:239,
+        backgroundColor: 'white',
         type:'container',
         id:'master'
     });
 
-    masterContainer.borderColor = '#000';
-    masterContainer.borderWidth = 1;
-    
     //create detail view container
     detailContainer = Ti.UI.createView({
         top:0,
         bottom:0,
         right:0,
         left:240,
+        backgroundColor: 'white',
         type:'container',
         id:'detail'
     });

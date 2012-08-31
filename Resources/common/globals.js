@@ -283,7 +283,7 @@ var GV  =
             var error = function(argument) {
                 Ti.API.log("error - couldn't get workitems :()");
             };
-            Polarium.trackerService.queryWorkitems(query,"id", ["id", "type", "author", "title", "status", "created", "description"], ok, error);
+            Polarium.trackerService.queryWorkitems(query,"id", ["id", "type", "author", "title", "status", "updated", "assignee", "created", "description"], ok, error);
         });
     },
     login : function(argument){

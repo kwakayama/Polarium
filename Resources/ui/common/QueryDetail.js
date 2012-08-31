@@ -33,12 +33,13 @@ function tableClickFkt (e){
         Ti.API.log('title: '+obj.title);
         Ti.API.log('status: '+obj.status);
         Ti.API.log('created: '+obj.created);
+        Ti.API.log('assignees: '+obj.assignees);
         if (obj.id === e.row.children[1].text) {            
             wi = obj;
+    		Ti.App.fireEvent('openDetailPopover', obj);
         }
     }
     actInd.show();
-    VARS.GV.getAssignableByWorkitemURI(wi.uri);
     // alert(wi);
 }
 
@@ -47,7 +48,7 @@ Titanium.App.addEventListener('openDetailPopover', function(obj){
     //hide loading animation
     actInd.hide();
     
-    var assignees = obj.assignees;
+    var assignees = wi.assignees;
     
     var popover = Ti.UI.iPad.createPopover({
         height:350,
