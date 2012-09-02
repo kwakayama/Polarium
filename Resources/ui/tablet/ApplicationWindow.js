@@ -7,7 +7,7 @@ var chooseProjectBtn,
 
 //Application Window Component Constructor
 exports.ApplicationWindow = function() {
-    
+
     // Global VARS
     VARS  = require('/common/globals');
 

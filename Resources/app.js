@@ -17,9 +17,12 @@ if (Ti.version < 1.8 ) {
 
 // This is a single context application with mutliple windows in a stack
 (function() {
-    
+        
     // Global VARS
     var VARS  = require('/common/globals');
+    
+    //include testing    
+    Titanium.include("/test/DataTest.js");
     
     //setting up the databases
     //bootstrap the database

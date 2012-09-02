@@ -3,6 +3,13 @@ var CryptoJS  = require('/common/aes').CryptoJS;
 
 var isFirstQueryItem = true;
 var queryItemCount;
+var DEBUG = false;
+
+var log = function(str) {
+    if (DEBUG && console && console.log) {
+        console.log(str);
+    }
+};
 
 // Common Global Variables
 var GV  =
@@ -65,7 +72,7 @@ var GV  =
         
         while (rows.isValidRow()){
             var id = rows.fieldByName('id');
-            Ti.API.log('db pin: '+rows.fieldByName('tmpPin'));
+            log('db pin: '+rows.fieldByName('tmpPin'));
             appData = {
                 //custom : this.decrypt(rows.fieldByName('custom')),
                 tmpPin : this.decrypt(rows.fieldByName('tmpPin')),
@@ -91,7 +98,7 @@ var GV  =
     //set tmp pin to enabled/disabled
     setIsSetPin : function(value){
         
-        Ti.API.log("set IsSetPin to " + value);
+        log("set IsSetPin to " + value);
         
         //open database
         var db = Ti.Database.open('PolarionApp');
@@ -114,7 +121,7 @@ var GV  =
         
         while (rows.isValidRow()){
             var id = rows.fieldByName('id');
-            Ti.API.log('db pin: '+rows.fieldByName('tmpPin'));
+            log('db pin: '+rows.fieldByName('tmpPin'));
             appData = {
                 tmpPin : this.decrypt(rows.fieldByName('tmpPin')),
                 tmpPinIsSet : this.decrypt(rows.fieldByName('tmpPinIsSet')),
@@ -136,7 +143,7 @@ var GV  =
         //open database
         var db = Ti.Database.open('PolarionApp');
         
-        Ti.API.log('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
+        log('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
         
         if (type === 'Name') {
             
@@ -181,7 +188,7 @@ var GV  =
     //function to delete Query by ID
     deleteQuery : function(id){
         
-        Ti.API.log('start deleting query with id: ' + id + 'currentworkitemid: '+this.currentWorkItemQueryID);
+        log('start deleting query with id: ' + id + 'currentworkitemid: '+this.currentWorkItemQueryID);
         
         //open database
         var db = Ti.Database.open('PolarionApp');
@@ -215,7 +222,7 @@ var GV  =
         
         while (rows.isValidRow()){
             var id = rows.fieldByName('id');
-            Ti.API.log('id: '+id+' - name: '+rows.fieldByName('name'));
+            log('id: '+id+' - name: '+rows.fieldByName('name'));
             query = {
                 custom : this.decrypt(rows.fieldByName('custom')),
                 id : rows.fieldByName('id'),
@@ -237,7 +244,7 @@ var GV  =
     },
     //get query object by id
     getCurrentQuery : function(){
-        Ti.API.log('---start getCurrentQuery---');    
+        log('---start getCurrentQuery---');    
         //open database
         var db = Ti.Database.open('PolarionApp');
     
@@ -259,7 +266,7 @@ var GV  =
                 assignables : this.decrypt(queryData.fieldByName('assignables')),
                 custom : this.decrypt(queryData.fieldByName('custom'))
             };
-            Ti.API.log('query name: '+this.decrypt(queryData.fieldByName('name'))+' query title: '+this.decrypt(queryData.fieldByName('title')));
+            log('query name: '+this.decrypt(queryData.fieldByName('name'))+' query title: '+this.decrypt(queryData.fieldByName('title')));
     
             db.close();
             return result;
@@ -277,11 +284,11 @@ var GV  =
             var query = getQueryStringById(GV.currentWorkItemQueryID);
             
             var ok = function(workitems) {
-                Ti.API.log('we got ' + workitems.length + ' workitems :)');
+                log('we got ' + workitems.length + ' workitems :)');
                 Ti.App.fireEvent('createQueryDetailTable',{ workitems:workitems});
             };
             var error = function(argument) {
-                Ti.API.log("error - couldn't get workitems :()");
+                log("error - couldn't get workitems :()");
             };
             Polarium.trackerService.queryWorkitems(query,"id", ["id", "type", "author", "title", "status", "updated", "assignee", "created", "description"], ok, error);
         });
@@ -302,13 +309,13 @@ var GV  =
         
         this.loginThen(function() {
             var ok = function(projects) {
-                Ti.API.log(projects);
-                Ti.API.log("length of projects: "+projects.length);
+                log(projects);
+                log("length of projects: "+projects.length);
                 
                 Ti.App.fireEvent('popoverProjects',{ projects:projects});
             };
             var error = function(argument){
-                Ti.API.log("error - couldn't get projects");
+                log("error - couldn't get projects");
             };
             Polarium.projectService.getProjects(ok, error);
         });
@@ -318,13 +325,13 @@ var GV  =
         
         this.loginThen(function() {
             var ok = function(projects) {
-                Ti.API.log(projects);
-                Ti.API.log("length of projects: "+projects.length);
+                log(projects);
+                log("length of projects: "+projects.length);
                 
                 Ti.App.fireEvent('popoverChooseProjectButton',{ projects:projects});
             };
             var error = function(argument){
-                Ti.API.log("error - couldn't get projects");
+                log("error - couldn't get projects");
             };
             Polarium.projectService.getProjects(ok, error);
         });
@@ -333,10 +340,10 @@ var GV  =
     getAssignables : function(){
         this.loginThen(function(){
             var ok = function(assignables) {
-                Ti.API.log(assignables);
+                log(assignables);
             };
             var error = function(argument) {
-                Ti.API.log("error - couldn't get projects");
+                log("error - couldn't get projects");
             };
             Polarium.trackerService.getAssignables(ok, error);
         });
@@ -364,7 +371,7 @@ var GV  =
     getAllEnumOptionsForId : function(argument) {
         this.loginThen(function() {
             var ok = function(enumoptions) {
-                Ti.API.log("OK getAllEnumOptionsForId");
+                log("OK getAllEnumOptionsForId");
                 // alert(enumoptions);
                 Ti.App.fireEvent('setTypeList', {name:'Type',value:enumoptions});
             };
@@ -408,12 +415,12 @@ var GV  =
     decrypt : function(enc){
         var result = '';
         if(enc !== null){
-           Ti.API.log("----start decrypting ----"+enc);
+           log("----start decrypting ----"+enc);
             //decrypt string with passphrase
             var decrypted = CryptoJS.AES.decrypt(enc, "Ich bin die Telekom - auf mich ist Verlass"+Ti.Platform.id);
             //set encoding
             result = decrypted.toString(CryptoJS.enc.Utf8);
-            Ti.API.log("----done decrypting: "+result);
+            log("----done decrypting: "+result);
         }
         return result;
     },
@@ -424,7 +431,7 @@ var GV  =
         var encUsername = this.encrypt(login.username);
         var encPwd = this.encrypt(login.pwd);
         var encServerUrl = this.encrypt(login.serverURL);
-        Ti.API.log(encUsername + ' - ' + this.decrypt(encUsername));
+        log(encUsername + ' - ' + this.decrypt(encUsername));
      
         db.execute("INSERT OR REPLACE INTO credentials (id,username,pwd,serverURL) VALUES (1,'"+encUsername+"','"+encPwd+"','"+encServerUrl+"')");
         db.close();
@@ -492,7 +499,7 @@ var getQueryStringById = function(id){
         queryItemCount = 0;
         query = queryHelper('title',result.title) + queryHelper('type',result.type) + queryHelper('status',result.status) + queryHelper('custom',result.custom) + queryHelper('assignee.id',result.assignables) + queryHelper('author.id',result.author) + queryHelper('project.id',GV.currentProjectId) + queryHelper('timePoint.id',result.timepoint) + queryHelper('dueDate',result.duedate);
         isFirstQueryItem = false;
-        Ti.API.log('query: '+query);
+        log('query: '+query);
             
     } else{
         query = null;
@@ -503,7 +510,7 @@ var getQueryStringById = function(id){
 
 function queryHelper(title, value){
 
-    Ti.API.log("queryItemCount "+queryItemCount);
+    log("queryItemCount "+queryItemCount);
     var result = '';
     var and = '';
     
