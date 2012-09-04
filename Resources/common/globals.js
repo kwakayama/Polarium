@@ -396,8 +396,20 @@ var GV  =
     loginThen : function(then) {
         credentials = this.getCredentials();
         
+        var host = credentials.serverURL;
+        if (host.indexOf('http://') > -1) {
+        	host = host.substring(7);
+        	Ti.API.log("host: "+host+" (http)");
+ 			Polarium.connection.setProtocol('http');
+        }
+        if (host.indexOf('https://') > -1) {
+        	host = host.substring(8);
+        	Ti.API.log("host: "+host+" (https)");
+ 			Polarium.connection.setProtocol('https');
+        }
+               
         //set host
-        Polarium.connection.setHost(credentials.serverURL);
+        Polarium.connection.setHost(host);
         
         Polarium.sessionService.login(
             credentials.username,

@@ -8,13 +8,17 @@
         <target device="blackberry">false</target>
     </deployment-targets>
     <sdk-version>2.1.1.GA</sdk-version>
+<<<<<<< HEAD
     <id>popchallange-v1</id>
+=======
+    <id>com.tsystems.polarium</id>
+>>>>>>> 26156e9697b80f20a770e36f106ffd21ed93c8d0
     <name>Polarium</name>
     <version>1.0</version>
-    <publisher>Kentaro Wakayama</publisher>
-    <url>http://</url>
-    <description>not specified</description>
-    <copyright>2012 by Kenta</copyright>
+    <publisher>Sebastian Bejga</publisher>
+    <url>http://polariumapp.com</url>
+    <description>Polarium brings Polarion on your iPad. Powered by Titanium Mobile.</description>
+    <copyright>2012 by Sebastian Bejga &amp; Kentaro Wakayama (T-Systems International GmbH)</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
