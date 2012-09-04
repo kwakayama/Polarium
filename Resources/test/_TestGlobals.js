@@ -1,4 +1,6 @@
-Titanium.include("/test/TitaniumUnity.js");
+"use strict";
+
+Ti.include("/test/TitaniumUnity.js");
 
 // Global VARS
 var VARS  = require('/common/globals');
@@ -19,13 +21,12 @@ var DataTestSuite = {
 // add your test functions:
  
     test_encrypt_decrypt: function() {
-        var string = "Ich bin die Telekom – auf mich ist Verlass"
-        
-        var enc = VARS.GV.encrypt(string);
-        var dec = VARS.GV.decrypt(enc);
+        var string = "Ich bin die Telekom – auf mich ist Verlass",   
+            enc = VARS.GV.encrypt(string),
+            dec = VARS.GV.decrypt(enc);
         
         jsUnity.assertions.assertEqual( string, dec, 'expect strings to be equal');
-    },
+    }
  
 };
  

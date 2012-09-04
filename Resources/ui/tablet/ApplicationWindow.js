@@ -1,9 +1,19 @@
+"use strict";
+
 // Private Variables
 var self;
 
 var VARS;
 var chooseProjectBtn,
     popover;
+    
+var DEBUG = false;
+
+var log = function(str) {
+    if (DEBUG && console && console.log) {
+        console.log(str);
+    }
+};
 
 //Application Window Component Constructor
 exports.ApplicationWindow = function() {
@@ -27,7 +37,7 @@ exports.ApplicationWindow = function() {
     var viewContainers = [];
 
     var hideAllViews = function(type){
-        Ti.API.log("kill this type of view: "+type);
+        log("kill this type of view: "+type);
         if (type === 'all') {
             var i;
             for(i=0; i<viewControllers.length; i++ ){
@@ -350,7 +360,7 @@ exports.ApplicationWindow = function() {
         if (typeof e.source.callback !== "undefined") {
             e.source.callback();
         }else{
-            // Ti.API.log("no callback defined :(");
+            // log("no callback defined :(");
             // alert("no "+e.source.type);
             Ti.API.info("no callback defined " + e.source.id);
         }

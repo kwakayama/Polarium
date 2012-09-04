@@ -8,7 +8,15 @@ var self,
     tableHasListener = false,
     workitems,
     wi = {};
-    
+
+var DEBUG = false;
+
+var log = function(str) {
+    if (DEBUG && console && console.log) {
+        console.log(str);
+    }
+};
+
 //type of window
 exports.type = "detail";
 
@@ -30,10 +38,10 @@ function trimTitle (string) {
 function tableClickFkt (e){
     for(key in workitems){
         var obj = workitems[key];
-        Ti.API.log('title: '+obj.title);
-        Ti.API.log('status: '+obj.status);
-        Ti.API.log('created: '+obj.created);
-        Ti.API.log('assignees: '+obj.assignees);
+        log('title: '+obj.title);
+        log('status: '+obj.status);
+        log('created: '+obj.created);
+        log('assignees: '+obj.assignees);
         if (obj.id === e.row.children[1].text) {            
             wi = obj;
     		Ti.App.fireEvent('openDetailPopover', obj);
@@ -253,10 +261,10 @@ Titanium.App.addEventListener('createQueryDetailTable',function(arg){
         var key;
         for (key in workitems) {
             var obj = workitems[key];
-            Ti.API.log('title: '+obj.title);
-            Ti.API.log('status: '+obj.status);
-            Ti.API.log('created: '+obj.created);
-            Ti.API.log('created: '+obj.id);
+            log('title: '+obj.title);
+            log('status: '+obj.status);
+            log('created: '+obj.created);
+            log('created: '+obj.id);
             
             var row = Titanium.UI.createTableViewRow({
                 height:50

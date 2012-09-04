@@ -17,12 +17,12 @@ if (Ti.version < 1.8 ) {
 
 // This is a single context application with mutliple windows in a stack
 (function() {
-        
+    
     // Global VARS
     var VARS  = require('/common/globals');
     
     //include testing    
-    Titanium.include("/test/DataTest.js");
+    Titanium.include("/test/_TestGlobals.js");
     
     //setting up the databases
     //bootstrap the database
@@ -164,9 +164,9 @@ if (Ti.version < 1.8 ) {
                     }
                 }
         });
-        function checkPin(tmpPwd){
+        var checkPin = function(tmpPwd){
 
-                pin = VARS.GV.getTmpPin();
+                var pin = VARS.GV.getTmpPin();
                 
                 if (pin === tmpPwd) {
                     
@@ -187,7 +187,7 @@ if (Ti.version < 1.8 ) {
         v.add(SubmitButton);
         w.add(v);
         w.open();
-    }
+    };
     
     // Notification System - Listen for Global Events
     Ti.App.addEventListener('restart', function(obj) {
@@ -264,7 +264,7 @@ if (Ti.version < 1.8 ) {
                 }
             });
                         
-            function checkPin(tmpPwd){
+            var checkPin = function(tmpPwd){
 
                 pin = VARS.GV.getTmpPin();
                 
