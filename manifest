@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 #appname:Polarium
 #publisher:Kentaro Wakayama
-#url:http://
-=======
-#appname:PolarionApp
-#publisher:Sebastian Bejga
 #url:http://polariumapp.com
->>>>>>> 26156e9697b80f20a770e36f106ffd21ed93c8d0
 #image:appicon.png
 #appid:com.tsystems.polarium
 #desc:Polarium brings Polarion on your iPad. Powered by Titanium Mobile.

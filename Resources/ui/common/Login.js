@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 26156e9697b80f20a770e36f106ffd21ed93c8d0
 // Private Vars
 var self;
 var VARS;

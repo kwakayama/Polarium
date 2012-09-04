@@ -8,11 +8,7 @@
         <target device="blackberry">false</target>
     </deployment-targets>
     <sdk-version>2.1.1.GA</sdk-version>
-<<<<<<< HEAD
-    <id>popchallange-v1</id>
-=======
     <id>com.tsystems.polarium</id>
->>>>>>> 26156e9697b80f20a770e36f106ffd21ed93c8d0
     <name>Polarium</name>
     <version>1.0</version>
     <publisher>Sebastian Bejga</publisher>
