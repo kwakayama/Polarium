@@ -26,7 +26,7 @@ if (Ti.version < 1.8 ) {
     
     //setting up the databases
     //bootstrap the database
-    var db = Ti.Database.open('PolarionApp');
+    var db = Ti.Database.open('Polarium');
     
     //don't backup to iCloud
     db.file.setRemoteBackup(false);

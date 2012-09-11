@@ -20,7 +20,6 @@ var GV  =
     previousStage : '',
     currentProjectId : '',
     removeAllChildren : function(viewObject){
-        // alert("type: " + viewObject.type);
         if (typeof viewObject !== 'undefined' && typeof viewObject.children !== 'undefined') {
             //copy array of child object references because view's "children" property is live collection of child object references
             var children = viewObject.children.slice(0);
@@ -36,11 +35,27 @@ var GV  =
             }
         }
     },
+    hideAllChildren : function(viewObject){
+        if (typeof viewObject !== 'undefined' && typeof viewObject.children !== 'undefined') {
+            //copy array of child object references because view's "children" property is live collection of child object references
+            var children = viewObject.children.slice(0);
+            var i;
+            for (i = 0; i < children.length; ++i) {
+        
+                viewObject.remove(children[i]);
+
+                if(children[i] !== null){
+
+                    children[i].hide();
+                }
+            }
+        }
+    },
     //this function will erease all data which is stored in the database
     wipeData : function(){
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         //Delete Data
         db.execute('DELETE FROM queries');
@@ -63,7 +78,7 @@ var GV  =
     getTmpPin : function(argument) {
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         //retrieve data
         var rows = db.execute('SELECT * FROM appinfo WHERE id IS ?', 1);
@@ -88,7 +103,7 @@ var GV  =
     setTmpPin : function(value) {
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         db.execute("UPDATE OR REPLACE appinfo SET tmpPin = '"+this.encrypt(value)+"' WHERE id IS 1");
         
@@ -101,7 +116,7 @@ var GV  =
         log("set IsSetPin to " + value);
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         db.execute("UPDATE OR REPLACE appinfo SET tmpPinIsSet = '"+this.encrypt(value)+"' WHERE id = 1");
         
@@ -112,7 +127,7 @@ var GV  =
     getIsSetPin : function(){
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         //retrieve data
         var rows = db.execute('SELECT * FROM appinfo WHERE id IS ?', 1);
@@ -141,7 +156,7 @@ var GV  =
     saveQueryData : function(type, value) {
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         log('start inserting: '+type+' - '+value + ' - '+this.currentWorkItemQueryID);
         
@@ -191,7 +206,7 @@ var GV  =
         log('start deleting query with id: ' + id + 'currentworkitemid: '+this.currentWorkItemQueryID);
         
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         if(id === this.currentWorkItemQueryID){
             this.currentWorkItemQueryID = 1;            
@@ -212,7 +227,7 @@ var GV  =
     //function to get all saved queries
     getQueries : function() {
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         //create a return object
         var result = [];    
@@ -246,7 +261,7 @@ var GV  =
     getCurrentQuery : function(){
         log('---start getCurrentQuery---');    
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
     
         //retrieve data
         var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', this.currentWorkItemQueryID);
@@ -438,7 +453,7 @@ var GV  =
     },
     saveCredentials : function(login){
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
         
         var encUsername = this.encrypt(login.username);
         var encPwd = this.encrypt(login.pwd);
@@ -453,7 +468,7 @@ var GV  =
     getCredentials : function(){
     
         //open database
-        var db = Ti.Database.open('PolarionApp');
+        var db = Ti.Database.open('Polarium');
     
         //retrieve data
         var credentials = db.execute('SELECT * FROM credentials');
@@ -483,7 +498,7 @@ var GV  =
 var getQueryStringById = function(id){
     
     //open database
-    var db = Ti.Database.open('PolarionApp');
+    var db = Ti.Database.open('Polarium');
 
     //retrieve data
     var queryData = db.execute('SELECT * FROM queries WHERE id IS ?', id);
